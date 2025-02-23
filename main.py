@@ -1,6 +1,10 @@
 import flet as ft
 import sqlite3
 import hashlib
+import os
+import pandas as pd
+import sqlite3
+import flet as ft
 
 # Función para encriptar la clave con SHA-256
 def encriptar_clave(clave):
@@ -103,15 +107,24 @@ def mostrar_menu_principal(page):
     page.add(
         ft.Column(
             [
-                ft.Text("Menú Principal", size=20, weight=ft.FontWeight.BOLD),
+                ft.Text("Menú Principal", size=24, weight=ft.FontWeight.BOLD),
+                ft.Divider(),  # Línea divisoria para organización visual
+                
+                ft.ElevatedButton("Panel de Control", on_click=lambda e: abrir_panel_control(page)),
                 ft.ElevatedButton("Gestión de Empleados", on_click=lambda e: abrir_gestion_empleados(page)),
-                ft.ElevatedButton("Cerrar Sesión", on_click=lambda e: mostrar_login(page))
+                ft.ElevatedButton("Cálculo de Nómina", on_click=lambda e: abrir_calculo_nomina(page)),
+                ft.ElevatedButton("Reportes", on_click=lambda e: abrir_reportes(page)),
+                ft.ElevatedButton("Configuración", on_click=lambda e: abrir_configuracion(page)),
+
+                ft.Divider(),  # Separador antes de cerrar sesión
+                ft.ElevatedButton("Cerrar Sesión", on_click=lambda e: mostrar_login(page), bgcolor="red", color="white"),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     )
     page.update()
+
 
 # Función para generar un código único para empleados
 def generar_codigo_empleado():
@@ -123,27 +136,47 @@ def generar_codigo_empleado():
     return f"E{count:05d}"
 
 # Función para guardar un empleado en la base de datos
+# Función para guardar un empleado en la base de datos
 def guardar_empleado(page, inputs):
-    datos = {k: v.value for k, v in inputs.items()}
-    
+    # Renombramos las claves del diccionario para que coincidan con los nombres correctos de las columnas en SQLite
+    datos = {
+        "codigo": inputs["Código"].value,
+        "nombre1": inputs["1° Nombre"].value,
+        "nombre2": inputs["2° Nombre"].value,
+        "apellido1": inputs["1° Apellido"].value,
+        "apellido2": inputs["2° Apellido"].value,
+        "cedula": inputs["Cédula"].value,
+        "correo": inputs["Correo"].value,
+        "direccion": inputs["Dirección"].value,
+        "pais": inputs["País"].value,
+        "ciudad": inputs["Ciudad"].value,
+        "estado": inputs["Estado"].value,
+        "fecha_nacimiento": inputs["Fecha de Nacimiento"].value,
+        "edad": inputs["Edad"].value,
+        "grado_instruccion": inputs["Grado de Instrucción"].value,
+        "carga_familiar": inputs["Carga Familiar"].value,
+    }
+
     try:
         conn = sqlite3.connect("nomina.db")
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO empleados (codigo, nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion,
                                    pais, ciudad, estado, fecha_nacimiento, edad, grado_instruccion, carga_familiar)
-            VALUES (:Código, :1° Nombre, :2° Nombre, :1° Apellido, :2° Apellido, :Cédula, :Correo, :Dirección,
-                    :País, :Ciudad, :Estado, :Fecha de Nacimiento, :Edad, :Grado de Instrucción, :Carga Familiar)
+            VALUES (:codigo, :nombre1, :nombre2, :apellido1, :apellido2, :cedula, :correo, :direccion,
+                    :pais, :ciudad, :estado, :fecha_nacimiento, :edad, :grado_instruccion, :carga_familiar)
         """, datos)
         conn.commit()
         conn.close()
-        
+
         page.snack_bar = ft.SnackBar(content=ft.Text("Empleado guardado con éxito"), open=True)
         page.update()
         abrir_gestion_empleados(page)  # Recargar la página después de guardar
+
     except sqlite3.Error as e:
         page.snack_bar = ft.SnackBar(content=ft.Text(f"Error en la base de datos: {e}"), open=True)
         page.update()
+
 
 # Función para mostrar la gestión de empleados
 def abrir_gestion_empleados(page):
@@ -182,10 +215,144 @@ def abrir_gestion_empleados(page):
     )
     page.update()
 
+# Función para abrir la sección "Panel de Control"
+def abrir_panel_control(page):
+    page.controls.clear()
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Panel de Control", size=20, weight=ft.FontWeight.BOLD),
+                ft.ElevatedButton("Volver al Menú", on_click=lambda e: mostrar_menu_principal(page))
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+    page.update()
+
+# Función para abrir la sección "Cálculo de Nómina"
+def abrir_calculo_nomina(page):
+    page.controls.clear()
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Cálculo de Nómina", size=20, weight=ft.FontWeight.BOLD),
+                ft.ElevatedButton("Volver al Menú", on_click=lambda e: mostrar_menu_principal(page))
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+    page.update()
+
+# Función para abrir la sección "Reportes"
+def abrir_reportes(page):
+    page.controls.clear()
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Reportes", size=20, weight=ft.FontWeight.BOLD),
+                ft.ElevatedButton("Volver al Menú", on_click=lambda e: mostrar_menu_principal(page))
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+    page.update()
+
+# Función para abrir la sección "Configuración"
+def abrir_configuracion(page):
+    page.controls.clear()
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Configuración", size=20, weight=ft.FontWeight.BOLD),
+                ft.ElevatedButton("Volver al Menú", on_click=lambda e: mostrar_menu_principal(page))
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+    page.update()
+# Función para generar y descargar el reporte en Excel
+def generar_reporte_empleados(page):
+    try:
+        conn = sqlite3.connect("nomina.db")
+        query = "SELECT * FROM empleados"
+        df = pd.read_sql_query(query, conn)  # Cargar datos en un DataFrame
+        conn.close()
+
+        if df.empty:
+            page.snack_bar = ft.SnackBar(content=ft.Text("No hay empleados registrados"), open=True)
+            page.update()
+            return
+        
+        file_path = "empleados_reporte.xlsx"
+        df.to_excel(file_path, index=False)  # Guardar en Excel
+
+        # Crear un enlace de descarga
+        page.add(
+            ft.Text("Reporte generado con éxito:", size=16, weight=ft.FontWeight.BOLD),
+            ft.TextButton("Descargar Reporte", on_click=lambda e: page.launch_url(file_path))
+        )
+        page.update()
+
+    except Exception as e:
+        page.snack_bar = ft.SnackBar(content=ft.Text(f"Error generando reporte: {e}"), open=True)
+        page.update()
+
+# Función para abrir la sección "Reportes"
+def abrir_reportes(page):
+    page.controls.clear()
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Reportes", size=20, weight=ft.FontWeight.BOLD),
+                ft.ElevatedButton("Generar Reporte de Empleados", on_click=lambda e: generar_reporte_empleados(page)),
+                ft.ElevatedButton("Volver al Menú", on_click=lambda e: mostrar_menu_principal(page))
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+    page.update()
+# Función para mostrar el menú principal
+def mostrar_menu_principal(page):
+    page.controls.clear()
+    page.add(
+        ft.Column(
+            [
+                ft.Text("Menú Principal", size=20, weight=ft.FontWeight.BOLD),
+                ft.ElevatedButton("Panel de Control", on_click=lambda e: abrir_panel_control(page)),
+                ft.ElevatedButton("Gestión de Empleados", on_click=lambda e: abrir_gestion_empleados(page)),
+                ft.ElevatedButton("Cálculo de Nómina", on_click=lambda e: abrir_calculo_nomina(page)),
+                ft.ElevatedButton("Reportes", on_click=lambda e: abrir_reportes(page)),
+                ft.ElevatedButton("Configuración", on_click=lambda e: abrir_configuracion(page)),
+                ft.ElevatedButton("Cerrar Sesión", on_click=lambda e: mostrar_login(page))
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+    page.update()
+
+def actualizar_github(mensaje):
+    try:
+        os.system("git add .")
+        os.system(f'git commit -m "{mensaje}"')
+        os.system("git push origin main")
+        print("Código actualizado en GitHub correctamente.")
+    except Exception as e:
+        print(f"Error al actualizar en GitHub: {e}")
 # Función principal que inicia la aplicación
 def main(page: ft.Page):
     inicializar_bd()  # Crear la base de datos y tablas si no existen
+    actualizar_github("Inicialización de la base de datos")  # Agregar aquí la actualización automática
     page.title = "Sistema de Nómina"
     mostrar_login(page)  # Muestra la pantalla de inicio de sesión
 
 ft.app(target=main)
+
+
+
+
