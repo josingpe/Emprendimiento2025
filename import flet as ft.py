@@ -136,69 +136,62 @@ def generar_codigo_empleado():
     return f"E{count:05d}"
 
 # Función para guardar un empleado en la base de datos
-import flet as ft
-from datetime import datetime
-
-# Función para calcular la edad
-def calcular_edad(fecha_nacimiento):
-    hoy = datetime.today()
-    diferencia = hoy - fecha_nacimiento
-    edad = diferencia.days // 365  # Aproximadamente el número de años
-    return edad
-
-# Función para abrir la gestión de empleados
-import flet as ft
-from datetime import datetime
-
-# Función para calcular la edad basada en la fecha de nacimiento
-def calcular_edad(fecha_nacimiento):
-    today = datetime.today()
-    edad = today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
-    return str(edad)
-
-# Función para generar un código de empleado automático (simulado aquí)
-def generar_codigo_empleado():
-    return "EMP" + str(datetime.now().strftime("%Y%m%d%H%M%S"))
-
-# Función para manejar el guardado del empleado
+# Función para guardar un empleado en la base de datos
 def guardar_empleado(page, inputs):
-    # Aquí puedes agregar la lógica para guardar los datos del empleado
-    print("Empleado Guardado:", {key: value.value for key, value in inputs.items()})
+    # Renombramos las claves del diccionario para que coincidan con los nombres correctos de las columnas en SQLite
+    datos = {
+        "codigo": inputs["Código"].value,
+        "nombre1": inputs["1° Nombre"].value,
+        "nombre2": inputs["2° Nombre"].value,
+        "apellido1": inputs["1° Apellido"].value,
+        "apellido2": inputs["2° Apellido"].value,
+        "cedula": inputs["Cédula"].value,
+        "correo": inputs["Correo"].value,
+        "direccion": inputs["Dirección"].value,
+        "pais": inputs["País"].value,
+        "ciudad": inputs["Ciudad"].value,
+        "estado": inputs["Estado"].value,
+        "fecha_nacimiento": inputs["Fecha de Nacimiento"].value,
+        "edad": inputs["Edad"].value,
+        "grado_instruccion": inputs["Grado de Instrucción"].value,
+        "carga_familiar": inputs["Carga Familiar"].value,
+    }
 
-# Función para mostrar el menú principal (puedes definirla según tu necesidad)
-def mostrar_menu_principal(page):
-    print("Regresando al menú principal...")
-    page.update()
+    try:
+        conn = sqlite3.connect("nomina.db")
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO empleados (codigo, nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion,
+                                   pais, ciudad, estado, fecha_nacimiento, edad, grado_instruccion, carga_familiar)
+            VALUES (:codigo, :nombre1, :nombre2, :apellido1, :apellido2, :cedula, :correo, :direccion,
+                    :pais, :ciudad, :estado, :fecha_nacimiento, :edad, :grado_instruccion, :carga_familiar)
+        """, datos)
+        conn.commit()
+        conn.close()
 
-# Función para mostrar la pantalla de gestión de empleados
-def mostrar_gestion_empleados(page):
-    # Crear los controles (campos de entrada)
+        page.snack_bar = ft.SnackBar(content=ft.Text("Empleado guardado con éxito"), open=True)
+        page.update()
+        abrir_gestion_empleados(page)  # Recargar la página después de guardar
+
+    except sqlite3.Error as e:
+        page.snack_bar = ft.SnackBar(content=ft.Text(f"Error en la base de datos: {e}"), open=True)
+        page.update()
+
+
+# Función para mostrar la gestión de empleados
+# Crear los controles (campos de entrada)
     inputs = {}
+    labels = ["Código", "1° Nombre", "2° Nombre", "1° Apellido", "2° Apellido", "Cédula", "Correo",
+              "Dirección", "País", "Ciudad", "Estado", "Fecha de Nacimiento", "Edad", "Grado de Instrucción", "Carga Familiar"]
 
-    # Labels de "Datos del Trabajador"
-    labels_trabajador = [
-        "ID-Trabajador", "Documento de Identidad", "Nacionalidad", "1° Apellido", "2° Apellido",
-        "1° Nombre", "2° Nombre", "Fecha de Nacimiento", "Edad", "Sexo", "Estado Civil", "Dirección", "Teléfono"
-    ]
-    
-    # Labels de "Datos Laborales"
-    labels_laborales = [
-        "Profesión", "Cargo", "Departamento", "Nomina", "División", "Banco", "Cuenta",
-        "Fecha de Ingreso", "Centro de Costo", "Estatus", "Tipo de Pago"
-    ]
-    
-    # Unir todos los labels en una sola lista
-    labels = labels_trabajador + labels_laborales
-
-    # Crear los campos de texto para cada label
     for label in labels:
         inputs[label] = ft.TextField(label=label, width=180, height=40)
 
     # Código de empleado generado automáticamente
-    inputs["ID-Trabajador"].value = generar_codigo_empleado()
-    inputs["ID-Trabajador"].disabled = True
+    inputs["Código"].value = generar_codigo_empleado()
+    inputs["Código"].disabled = True
 
-    # Campo de texto para la fecha de nacimiento (usuario la escribe manualmente)
+    # Crear el campo de texto para la fecha de nacimiento (usuario la escribe manualmente)
     fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento (YYYY-MM-DD)", width=180, height=40)
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
@@ -236,10 +229,7 @@ def mostrar_gestion_empleados(page):
         ft.Column(
             [
                 ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
-                ft.Text("Datos del Trabajador", size=18, weight=ft.FontWeight.BOLD),
-                *filas[:len(labels_trabajador)],  # Solo mostrar los primeros campos para "Datos del Trabajador"
-                ft.Text("Datos Laborales", size=18, weight=ft.FontWeight.BOLD),
-                *filas[len(labels_trabajador):],  # Mostrar los campos para "Datos Laborales"
+                *filas,
                 ft.Row([guardar_button, regresar_button], alignment=ft.MainAxisAlignment.CENTER)
             ],
             scroll=ft.ScrollMode.ALWAYS,
@@ -249,22 +239,6 @@ def mostrar_gestion_empleados(page):
     )
 
     page.update()
-
-# Función principal que ejecuta la aplicación
-def main(page):
-    page.window_width = 800
-    page.window_height = 600
-    page.window_resizable = False
-    mostrar_gestion_empleados(page)
-
-# Ejecuta la aplicación de Flet
-ft.app(target=main)
-
-
-
-
-
-
 
 # Función para abrir la sección "Panel de Control"
 def abrir_panel_control(page):
@@ -403,4 +377,7 @@ def main(page: ft.Page):
     mostrar_login(page)  # Muestra la pantalla de inicio de sesión
 
 ft.app(target=main)
+
+
+
 
