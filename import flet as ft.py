@@ -179,10 +179,19 @@ def guardar_empleado(page, inputs):
 
 
 # Función para mostrar la gestión de empleados
+import flet as ft
+from datetime import datetime
+
+def calcular_edad(fecha_nacimiento):
+    hoy = datetime.today()
+    diferencia = hoy - fecha_nacimiento
+    edad = diferencia.days // 365  # Aproximadamente el número de años
+    return edad
+
 def abrir_gestion_empleados(page):
     page.controls.clear()
-    
-    # Definir los controles (campos de entrada)
+
+    # Crear los controles (campos de entrada)
     inputs = {}
     labels = ["Código", "1° Nombre", "2° Nombre", "1° Apellido", "2° Apellido", "Cédula", "Correo",
               "Dirección", "País", "Ciudad", "Estado", "Fecha de Nacimiento", "Edad", "Grado de Instrucción", "Carga Familiar"]
@@ -194,30 +203,21 @@ def abrir_gestion_empleados(page):
     inputs["Código"].value = generar_codigo_empleado()
     inputs["Código"].disabled = True
 
-    # Crear el DatePicker para la fecha de nacimiento (sin parámetros extra)
-    fecha_nacimiento = ft.DatePicker()
+    # Crear el DatePicker para la fecha de nacimiento
+    fecha_nacimiento = ft.DatePicker(label="Fecha de Nacimiento")
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
     edad = ft.TextField(label="Edad", width=180, height=40, disabled=True)
     inputs["Edad"] = edad
 
-    # Función para calcular la edad a partir de la fecha de nacimiento
-    def calcular_edad(fecha_nacimiento):
-        from datetime import datetime
-        hoy = datetime.today()
-        diferencia = hoy - fecha_nacimiento
-        edad = diferencia.days // 365  # Aproximadamente el número de años
-        return edad
-
-    # Actualizar la edad cuando el usuario seleccione una fecha
+    # Función para actualizar la edad cuando se seleccione una fecha
     def actualizar_edad(e):
-        fecha_seleccionada = fecha_nacimiento.value
-        if fecha_seleccionada:
-            edad.value = calcular_edad(fecha_seleccionada)
+        if fecha_nacimiento.value:
+            edad.value = calcular_edad(fecha_nacimiento.value)
             page.update()
 
-    # Establecer un controlador para actualizar la edad cuando se seleccione la fecha
+    # Establecer el evento para el cambio de la fecha
     fecha_nacimiento.on_change = actualizar_edad
 
     # Crear botones
@@ -227,7 +227,7 @@ def abrir_gestion_empleados(page):
     # Agrupar los campos en filas
     campos_por_fila = 3
     filas = [
-        ft.Row([inputs[label] for label in labels[i:i + campos_por_fila]], spacing=5, 
+        ft.Row([inputs[label] for label in labels[i:i + campos_por_fila]], spacing=5,
                alignment=ft.MainAxisAlignment.CENTER)
         for i in range(0, len(labels), campos_por_fila)
     ]
