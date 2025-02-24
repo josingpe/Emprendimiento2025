@@ -192,8 +192,8 @@ def abrir_gestion_empleados(page):
     inputs["Código"].value = generar_codigo_empleado()
     inputs["Código"].disabled = True
 
-    # Crear el DatePicker para la fecha de nacimiento sin usar 'label'
-    fecha_nacimiento = ft.DatePicker(width=180)
+    # Crear el DatePicker para la fecha de nacimiento sin usar 'label' o 'width'
+    fecha_nacimiento = ft.DatePicker()  # No pasamos parámetros adicionales
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
@@ -241,9 +241,6 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
-
-
-
 
 
 
