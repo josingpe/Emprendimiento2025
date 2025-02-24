@@ -139,7 +139,7 @@ def generar_codigo_empleado():
 import flet as ft
 from datetime import datetime
 
-# Función para calcular la edad basada en la fecha de nacimiento
+# Función para calcular la edad
 def calcular_edad(fecha_nacimiento):
     hoy = datetime.today()
     diferencia = hoy - fecha_nacimiento
@@ -162,19 +162,23 @@ def abrir_gestion_empleados(page):
     inputs["Código"].value = generar_codigo_empleado()
     inputs["Código"].disabled = True
 
-    # Crear el DatePicker para la fecha de nacimiento
-    fecha_nacimiento = ft.DatePicker()
+    # Crear el campo de texto para la fecha de nacimiento (usuario la escribe manualmente)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento (YYYY-MM-DD)", width=180, height=40)
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
     edad = ft.TextField(label="Edad", width=180, height=40, disabled=True)
     inputs["Edad"] = edad
 
-    # Función para actualizar la edad cuando se seleccione una fecha
+    # Función para actualizar la edad cuando se ingrese una fecha válida
     def actualizar_edad(e):
-        if fecha_nacimiento.value:
-            edad.value = calcular_edad(fecha_nacimiento.value)
-            page.update()
+        try:
+            # Intentar convertir la fecha ingresada en formato YYYY-MM-DD
+            fecha_valida = datetime.strptime(fecha_nacimiento.value, "%Y-%m-%d")
+            edad.value = calcular_edad(fecha_valida)
+        except ValueError:
+            edad.value = "Fecha inválida"
+        page.update()
 
     # Establecer el evento para el cambio de la fecha
     fecha_nacimiento.on_change = actualizar_edad
@@ -206,6 +210,8 @@ def abrir_gestion_empleados(page):
     )
 
     page.update()
+
+
 
 
 
