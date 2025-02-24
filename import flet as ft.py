@@ -179,16 +179,6 @@ def guardar_empleado(page, inputs):
 
 
 # Función para mostrar la gestión de empleados
-# Función para calcular la edad a partir de la fecha de nacimiento
-from datetime import datetime
-
-def calcular_edad(fecha_nacimiento):
-    today = datetime.today()
-    birth_date = datetime.strptime(fecha_nacimiento, "%Y-%m-%d")
-    edad = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
-    return edad
-
-# Función para abrir la gestión de empleados
 # Función para abrir la gestión de empleados
 def abrir_gestion_empleados(page):
     page.controls.clear()
@@ -202,8 +192,8 @@ def abrir_gestion_empleados(page):
     inputs["Código"].value = generar_codigo_empleado()
     inputs["Código"].disabled = True
 
-    # Añadir un DatePicker para seleccionar la fecha de nacimiento
-    fecha_nacimiento = ft.DatePicker(label="Fecha de Nacimiento", width=180)
+    # Crear el DatePicker para la fecha de nacimiento sin usar 'label'
+    fecha_nacimiento = ft.DatePicker(width=180)
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
@@ -251,6 +241,7 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
+
 
 
 
