@@ -179,9 +179,10 @@ def guardar_empleado(page, inputs):
 
 
 # Función para mostrar la gestión de empleados
-# Función para abrir la gestión de empleados
 def abrir_gestion_empleados(page):
     page.controls.clear()
+    
+    # Definir los controles (campos de entrada)
     inputs = {}
     labels = ["Código", "1° Nombre", "2° Nombre", "1° Apellido", "2° Apellido", "Cédula", "Correo",
               "Dirección", "País", "Ciudad", "Estado", "Fecha de Nacimiento", "Edad", "Grado de Instrucción", "Carga Familiar"]
@@ -189,11 +190,12 @@ def abrir_gestion_empleados(page):
     for label in labels:
         inputs[label] = ft.TextField(label=label, width=180, height=40)
 
+    # Código de empleado generado automáticamente
     inputs["Código"].value = generar_codigo_empleado()
     inputs["Código"].disabled = True
 
-    # Crear el DatePicker para la fecha de nacimiento sin usar 'label' o 'width'
-    fecha_nacimiento = ft.DatePicker()  # No pasamos parámetros adicionales
+    # Crear el DatePicker para la fecha de nacimiento (sin parámetros extra)
+    fecha_nacimiento = ft.DatePicker()
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
@@ -218,9 +220,11 @@ def abrir_gestion_empleados(page):
     # Establecer un controlador para actualizar la edad cuando se seleccione la fecha
     fecha_nacimiento.on_change = actualizar_edad
 
+    # Crear botones
     guardar_button = ft.ElevatedButton("Guardar", on_click=lambda e: guardar_empleado(page, inputs))
     regresar_button = ft.ElevatedButton("Regresar", on_click=lambda e: mostrar_menu_principal(page))
 
+    # Agrupar los campos en filas
     campos_por_fila = 3
     filas = [
         ft.Row([inputs[label] for label in labels[i:i + campos_por_fila]], spacing=5, 
@@ -228,6 +232,7 @@ def abrir_gestion_empleados(page):
         for i in range(0, len(labels), campos_por_fila)
     ]
 
+    # Agregar los controles a la página
     page.add(
         ft.Column(
             [
@@ -240,7 +245,9 @@ def abrir_gestion_empleados(page):
             horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     )
+
     page.update()
+
 
 
 
