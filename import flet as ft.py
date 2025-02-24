@@ -189,6 +189,7 @@ def calcular_edad(fecha_nacimiento):
     return edad
 
 # Función para abrir la gestión de empleados
+# Función para abrir la gestión de empleados
 def abrir_gestion_empleados(page):
     page.controls.clear()
     inputs = {}
@@ -202,7 +203,7 @@ def abrir_gestion_empleados(page):
     inputs["Código"].disabled = True
 
     # Añadir un DatePicker para seleccionar la fecha de nacimiento
-    fecha_nacimiento = ft.DatePicker(label="Fecha de Nacimiento", width=180)
+    fecha_nacimiento = ft.DatePicker(width=180)
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
@@ -233,6 +234,8 @@ def abrir_gestion_empleados(page):
         ft.Column(
             [
                 ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
+                ft.Text("Fecha de Nacimiento", size=16),  # Etiqueta manual
+                fecha_nacimiento,  # El DatePicker
                 *filas,
                 ft.Row([guardar_button, regresar_button], alignment=ft.MainAxisAlignment.CENTER)
             ],
@@ -242,6 +245,7 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
+
 
 
 # Función para abrir la sección "Panel de Control"
