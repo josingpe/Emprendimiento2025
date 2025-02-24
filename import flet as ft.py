@@ -72,21 +72,33 @@ def verificar_credenciales(page, usuario, clave):
         page.snack_bar = ft.SnackBar(content=ft.Text(f"Error en la base de datos: {e}"), open=True)
         page.update()
 
+import flet as ft
+
 # Función para mostrar la pantalla de inicio de sesión
 def mostrar_login(page):
+    # Crear un contenedor con una imagen de fondo
+    contenedor_fondo = ft.Container(
+        image=ft.Image("C:/Users/josin/Downloads/python/rrhh.jpg"), # Cambia esta ruta por la de tu imagen
+        expand=True,  # Hace que el contenedor ocupe todo el espacio disponible
+    )
+
+    # Configuración de la pantalla
     page.bgcolor = "#f4f4f4"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
+    # Crear los campos de usuario y contraseña
     usuario = ft.TextField(label="Usuario", width=300, bgcolor="white", border_color="#2196F3")
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
+    # Crear el botón de inicio de sesión
     boton_login = ft.ElevatedButton(
         text="Iniciar Sesión",
         on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),
         bgcolor="#2196F3", color="white"
     )
 
+    # Crear un contenedor para el formulario (usuario, clave, botón)
     card = ft.Container(
         content=ft.Column(
             [usuario, clave, boton_login],
@@ -97,9 +109,21 @@ def mostrar_login(page):
         shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
     )
 
+    # Limpiar los controles previos y agregar el nuevo fondo con los controles del formulario
     page.controls.clear()
-    page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
+    contenedor_fondo.content = card  # Poner el formulario dentro del contenedor con fondo
+    page.add(contenedor_fondo)  # Agregar el contenedor con la imagen de fondo
     page.update()
+
+# Función ficticia para verificar credenciales (puedes ajustarla a tu lógica)
+def verificar_credenciales(page, usuario, clave):
+    print(f"Usuario: {usuario}, Clave: {clave}")
+    # Aquí agregarías la lógica de validación
+    pass
+
+# Ejecuta la aplicación
+ft.app(target=mostrar_login)
+
 
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
