@@ -136,58 +136,17 @@ def generar_codigo_empleado():
     return f"E{count:05d}"
 
 # Función para guardar un empleado en la base de datos
-# Función para guardar un empleado en la base de datos
-def guardar_empleado(page, inputs):
-    # Renombramos las claves del diccionario para que coincidan con los nombres correctos de las columnas en SQLite
-    datos = {
-        "codigo": inputs["Código"].value,
-        "nombre1": inputs["1° Nombre"].value,
-        "nombre2": inputs["2° Nombre"].value,
-        "apellido1": inputs["1° Apellido"].value,
-        "apellido2": inputs["2° Apellido"].value,
-        "cedula": inputs["Cédula"].value,
-        "correo": inputs["Correo"].value,
-        "direccion": inputs["Dirección"].value,
-        "pais": inputs["País"].value,
-        "ciudad": inputs["Ciudad"].value,
-        "estado": inputs["Estado"].value,
-        "fecha_nacimiento": inputs["Fecha de Nacimiento"].value,
-        "edad": inputs["Edad"].value,
-        "grado_instruccion": inputs["Grado de Instrucción"].value,
-        "carga_familiar": inputs["Carga Familiar"].value,
-    }
-
-    try:
-        conn = sqlite3.connect("nomina.db")
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO empleados (codigo, nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion,
-                                   pais, ciudad, estado, fecha_nacimiento, edad, grado_instruccion, carga_familiar)
-            VALUES (:codigo, :nombre1, :nombre2, :apellido1, :apellido2, :cedula, :correo, :direccion,
-                    :pais, :ciudad, :estado, :fecha_nacimiento, :edad, :grado_instruccion, :carga_familiar)
-        """, datos)
-        conn.commit()
-        conn.close()
-
-        page.snack_bar = ft.SnackBar(content=ft.Text("Empleado guardado con éxito"), open=True)
-        page.update()
-        abrir_gestion_empleados(page)  # Recargar la página después de guardar
-
-    except sqlite3.Error as e:
-        page.snack_bar = ft.SnackBar(content=ft.Text(f"Error en la base de datos: {e}"), open=True)
-        page.update()
-
-
-# Función para mostrar la gestión de empleados
 import flet as ft
 from datetime import datetime
 
+# Función para calcular la edad basada en la fecha de nacimiento
 def calcular_edad(fecha_nacimiento):
     hoy = datetime.today()
     diferencia = hoy - fecha_nacimiento
     edad = diferencia.days // 365  # Aproximadamente el número de años
     return edad
 
+# Función para abrir la gestión de empleados
 def abrir_gestion_empleados(page):
     page.controls.clear()
 
@@ -204,7 +163,7 @@ def abrir_gestion_empleados(page):
     inputs["Código"].disabled = True
 
     # Crear el DatePicker para la fecha de nacimiento
-    fecha_nacimiento = ft.DatePicker(label="Fecha de Nacimiento")
+    fecha_nacimiento = ft.DatePicker()
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
     # Campo de edad, que se calculará automáticamente
@@ -247,6 +206,7 @@ def abrir_gestion_empleados(page):
     )
 
     page.update()
+
 
 
 
