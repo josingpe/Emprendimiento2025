@@ -74,19 +74,29 @@ def verificar_credenciales(page, usuario, clave):
 
 # Función para mostrar la pantalla de inicio de sesión
 def mostrar_login(page):
-    page.bgcolor = "#f4f4f4"
+    # Creamos un contenedor de fondo con la imagen
+    fondo = ft.Container(
+        image=ft.Image("C:/Users/josin/Downloads/python/rrhh.jpg"),  # Ruta correcta de tu imagen
+        expand=True,  # Esto asegura que el fondo ocupe todo el espacio disponible
+    )
+
+    # Ajustamos la apariencia de la página
+    page.bgcolor = "#f4f4f4"  # Fondo blanco, si es necesario
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
+    # Campos de texto para usuario y clave
     usuario = ft.TextField(label="Usuario", width=300, bgcolor="white", border_color="#2196F3")
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
+    # Botón de inicio de sesión
     boton_login = ft.ElevatedButton(
         text="Iniciar Sesión",
         on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),
         bgcolor="#2196F3", color="white"
     )
 
+    # Card que contiene los campos de texto y el botón
     card = ft.Container(
         content=ft.Column(
             [usuario, clave, boton_login],
@@ -97,9 +107,12 @@ def mostrar_login(page):
         shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
     )
 
+    # Limpia la pantalla y agrega el fondo con el card encima
     page.controls.clear()
-    page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
+    page.add(fondo)  # Primero agregamos el fondo
+    page.add(card)   # Luego agregamos el formulario sobre el fondo
     page.update()
+
 
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
