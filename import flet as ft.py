@@ -147,22 +147,58 @@ def calcular_edad(fecha_nacimiento):
     return edad
 
 # Función para abrir la gestión de empleados
-def abrir_gestion_empleados(page):
-    page.controls.clear()
+import flet as ft
+from datetime import datetime
 
+# Función para calcular la edad basada en la fecha de nacimiento
+def calcular_edad(fecha_nacimiento):
+    today = datetime.today()
+    edad = today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+    return str(edad)
+
+# Función para generar un código de empleado automático (simulado aquí)
+def generar_codigo_empleado():
+    return "EMP" + str(datetime.now().strftime("%Y%m%d%H%M%S"))
+
+# Función para manejar el guardado del empleado
+def guardar_empleado(page, inputs):
+    # Aquí puedes agregar la lógica para guardar los datos del empleado
+    print("Empleado Guardado:", {key: value.value for key, value in inputs.items()})
+
+# Función para mostrar el menú principal (puedes definirla según tu necesidad)
+def mostrar_menu_principal(page):
+    print("Regresando al menú principal...")
+    page.update()
+
+# Función para mostrar la pantalla de gestión de empleados
+def mostrar_gestion_empleados(page):
     # Crear los controles (campos de entrada)
     inputs = {}
-    labels = ["Código", "1° Nombre", "2° Nombre", "1° Apellido", "2° Apellido", "Cédula", "Correo",
-              "Dirección", "País", "Ciudad", "Estado", "Fecha de Nacimiento", "Edad", "Grado de Instrucción", "Carga Familiar"]
 
+    # Labels de "Datos del Trabajador"
+    labels_trabajador = [
+        "ID-Trabajador", "Documento de Identidad", "Nacionalidad", "1° Apellido", "2° Apellido",
+        "1° Nombre", "2° Nombre", "Fecha de Nacimiento", "Edad", "Sexo", "Estado Civil", "Dirección", "Teléfono"
+    ]
+    
+    # Labels de "Datos Laborales"
+    labels_laborales = [
+        "Profesión", "Cargo", "Departamento", "Nomina", "División", "Banco", "Cuenta",
+        "Fecha de Ingreso", "Centro de Costo", "Estatus", "Tipo de Pago"
+    ]
+    
+    # Unir todos los labels en una sola lista
+    labels = labels_trabajador + labels_laborales
+
+    # Crear los campos de texto para cada label
     for label in labels:
         inputs[label] = ft.TextField(label=label, width=180, height=40)
 
     # Código de empleado generado automáticamente
-    inputs["Código"].value = generar_codigo_empleado()
-    inputs["Código"].disabled = True
+    inputs["ID-Trabajador"].value = generar_codigo_empleado()
+    inputs["ID-Trabajador"].disabled = True
 
-    # Crear el campo de texto para la fecha de nacimiento (usuario la escribe manualmente)
+    # Campo de texto para la fecha de nacimiento (usuario la escribe manualmente)
     fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento (YYYY-MM-DD)", width=180, height=40)
     inputs["Fecha de Nacimiento"] = fecha_nacimiento
 
@@ -200,7 +236,10 @@ def abrir_gestion_empleados(page):
         ft.Column(
             [
                 ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
-                *filas,
+                ft.Text("Datos del Trabajador", size=18, weight=ft.FontWeight.BOLD),
+                *filas[:len(labels_trabajador)],  # Solo mostrar los primeros campos para "Datos del Trabajador"
+                ft.Text("Datos Laborales", size=18, weight=ft.FontWeight.BOLD),
+                *filas[len(labels_trabajador):],  # Mostrar los campos para "Datos Laborales"
                 ft.Row([guardar_button, regresar_button], alignment=ft.MainAxisAlignment.CENTER)
             ],
             scroll=ft.ScrollMode.ALWAYS,
@@ -210,6 +249,16 @@ def abrir_gestion_empleados(page):
     )
 
     page.update()
+
+# Función principal que ejecuta la aplicación
+def main(page):
+    page.window_width = 800
+    page.window_height = 600
+    page.window_resizable = False
+    mostrar_gestion_empleados(page)
+
+# Ejecuta la aplicación de Flet
+ft.app(target=main)
 
 
 
