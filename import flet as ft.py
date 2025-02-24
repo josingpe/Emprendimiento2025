@@ -180,6 +180,7 @@ def guardar_empleado(page, inputs):
 
 # Función para mostrar la gestión de empleados
 # Crear los controles (campos de entrada)
+def abrir_gestion_empleados(page):
     inputs = {}
     labels = ["Código", "1° Nombre", "2° Nombre", "1° Apellido", "2° Apellido", "Cédula", "Correo",
               "Dirección", "País", "Ciudad", "Estado", "Fecha de Nacimiento", "Edad", "Grado de Instrucción", "Carga Familiar"]
