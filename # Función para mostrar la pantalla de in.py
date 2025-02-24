@@ -4,8 +4,8 @@ import flet as ft
 def mostrar_login(page):
     page.bgcolor = ft.colors.BLUE_50  # Color de fondo suave
     
-    # URL de la imagen de fondo
-    fondo_imagen_url = "https://i.ibb.co/N2yyYy0W/rrhh.jpg"  # Cambia esto por una URL de imagen válida
+    # URL de la imagen de fondo con un tamaño más grande
+    fondo_imagen_url = "https://i.ibb.co/N2yyYy0W/rrhh.jpg"  # Cambia esto por una URL de imagen válida más grande
 
     # Crea la imagen de fondo que ocupará toda la pantalla
     fondo = ft.Image(
@@ -53,8 +53,8 @@ def mostrar_login(page):
 
 # Función principal que ejecuta la aplicación
 def main(page):
-    page.window_width = 700
-    page.window_height = 700
+    page.window_width = 500
+    page.window_height = 500
     page.window_resizable = False
     mostrar_login(page)
 
