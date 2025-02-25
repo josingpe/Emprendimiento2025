@@ -38,7 +38,6 @@ def main(page: ft.Page):
 
     page.add(tasa_text, boton_actualizar)
 
-ft.app(target=main)
 
 
 # Función para encriptar la clave con SHA-256
