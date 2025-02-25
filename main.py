@@ -210,20 +210,7 @@ def guardar_empleado(page, inputs):
         page.update()
 
 # Función para mostrar la gestión de empleados
-import flet as ft
-import sqlite3
-from datetime import datetime
 
-
-import flet as ft
-import sqlite3
-from datetime import datetime
-
-import flet as ft
-import sqlite3
-import os
-import platform
-from datetime import datetime
 
 import flet as ft
 import sqlite3
@@ -333,6 +320,7 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
+
 
 
 # Función para abrir la sección "Cálculo de Nómina"
