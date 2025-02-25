@@ -120,6 +120,17 @@ from datetime import datetime
 import requests
 
 # Función para mostrar el menú principal
+
+def obtener_tasa_dolar():
+    try:
+        response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
+        data = response.json()
+        return data["rates"].get("VES", "No disponible")
+    except Exception as e:
+        print(f"Error obteniendo la tasa: {e}")
+        return "Error"
+
+# Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
     page.add(
@@ -142,7 +153,6 @@ def mostrar_menu_principal(page):
         )
     )
     page.update()
-
 
 
 
