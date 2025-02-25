@@ -210,14 +210,7 @@ def guardar_empleado(page, inputs):
         page.update()
 
 # Función para mostrar la gestión de empleados
-import flet as ft
-import sqlite3
-from datetime import datetime
 
-
-import flet as ft
-import sqlite3
-from datetime import datetime
 
 import flet as ft
 import sqlite3
@@ -281,54 +274,36 @@ def abrir_gestion_empleados(page):
             print("Empleado no encontrado.")
         page.update()
 
+    # Estilos
+    textfield_style = {"bgcolor": "#E3F2FD", "border_radius": 5}
+    text_style = {"weight": ft.FontWeight.BOLD}
+
     # Campos de entrada con ajuste de tamaño
     input_width = 250
-    consulta_cedula = ft.TextField(label="Consultar por Cédula", width=input_width)
+    consulta_cedula = ft.TextField(label="Consultar por Cédula", width=input_width, **textfield_style)
     boton_consulta = ft.ElevatedButton("Buscar", icon=ft.Icons.SEARCH, on_click=consultar_empleado)
     
-    nombre1 = ft.TextField(label="1° Nombre", width=input_width)
-    nombre2 = ft.TextField(label="2° Nombre", width=input_width)
-    apellido1 = ft.TextField(label="1° Apellido", width=input_width)
-    apellido2 = ft.TextField(label="2° Apellido", width=input_width)
-    cedula = ft.TextField(label="Cédula", width=input_width)
-    correo = ft.TextField(label="Correo", width=input_width)
-    direccion = ft.TextField(label="Dirección", width=input_width)
-    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=input_width)
-    edad = ft.TextField(label="Edad", width=100, disabled=True)
+    nombre1 = ft.TextField(label="1° Nombre", width=input_width, **textfield_style)
+    nombre2 = ft.TextField(label="2° Nombre", width=input_width, **textfield_style)
+    apellido1 = ft.TextField(label="1° Apellido", width=input_width, **textfield_style)
+    apellido2 = ft.TextField(label="2° Apellido", width=input_width, **textfield_style)
+    cedula = ft.TextField(label="Cédula", width=input_width, **textfield_style)
+    correo = ft.TextField(label="Correo", width=input_width, **textfield_style)
+    direccion = ft.TextField(label="Dirección", width=input_width, **textfield_style)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=input_width, **textfield_style)
+    edad = ft.TextField(label="Edad", width=100, disabled=True, **textfield_style)
     fecha_nacimiento.on_change = actualizar_edad
     sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=input_width)
     estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=input_width)
-    cargo = ft.TextField(label="Cargo", width=input_width)
-    departamento = ft.TextField(label="Departamento", width=input_width)
-    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=input_width)
-    centro_costo = ft.TextField(label="Centro de Costo", width=input_width)
+    cargo = ft.TextField(label="Cargo", width=input_width, **textfield_style)
+    departamento = ft.TextField(label="Departamento", width=input_width, **textfield_style)
+    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=input_width, **textfield_style)
+    centro_costo = ft.TextField(label="Centro de Costo", width=input_width, **textfield_style)
     tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=input_width)
     estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=input_width)
-    banco = ft.TextField(label="Banco", width=input_width)
-    numero_cuenta = ft.TextField(label="Número de Cuenta", width=input_width)
-    codigo_empleado = ft.TextField(label="Código de Empleado", width=input_width, disabled=True)
-    
-    # Secciones con 4 campos por fila
-    datos_personales = ft.Column([
-        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([consulta_cedula, boton_consulta]),
-        ft.Row([nombre1, nombre2, apellido1, apellido2], spacing=10),
-        ft.Row([cedula, correo, direccion, fecha_nacimiento], spacing=10),
-        ft.Row([edad, sexo, estado_civil, cargo], spacing=10),
-        ft.Row([departamento, fecha_ingreso, centro_costo, tipo_pago], spacing=10)
-    ], spacing=15)
-    
-    datos_bancarios = ft.Column([
-        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([estatus, banco, numero_cuenta, codigo_empleado], spacing=10)
-    ], spacing=15)
-
-    # Botones centrados
-    botones = ft.Row([
-        ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado, bgcolor="#2196F3", color="white"),
-        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white"),
-        ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes, bgcolor="#4CAF50", color="white")
-    ], alignment=ft.MainAxisAlignment.CENTER, spacing=20)
+    banco = ft.TextField(label="Banco", width=input_width, **textfield_style)
+    numero_cuenta = ft.TextField(label="Número de Cuenta", width=input_width, **textfield_style)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=input_width, disabled=True, **textfield_style)
     
     # Agregar todo a la página sin división
     page.add(
@@ -345,6 +320,7 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
+
 
 # Función para abrir la sección "Cálculo de Nómina"
 def abrir_calculo_nomina(page):
