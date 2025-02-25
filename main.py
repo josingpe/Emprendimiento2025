@@ -135,20 +135,24 @@ def mostrar_menu_principal(page):
         fecha_hora.value = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         page.update()
     
-    page.add(
-        ft.Row([
+    encabezado = ft.Row(
+        [
             ft.Text("Menú Principal", size=24, weight=ft.FontWeight.BOLD),
-            ft.Container(
-                content=ft.Row([
+            ft.Row(
+                [
                     ft.Icon(ft.Icons.MONETIZATION_ON, color="green"),
                     tasa,
-                    ft.ElevatedButton("Actualizar", icon=ft.Icons.REFRESH, on_click=actualizar_tasa)
-                ], alignment=ft.MainAxisAlignment.END),
-                alignment=ft.alignment.top_right
-            )
-        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                    ft.ElevatedButton("Actualizar", icon=ft.Icons.REFRESH, on_click=actualizar_tasa),
+                ],
+                alignment=ft.MainAxisAlignment.END,
+            ),
+        ],
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+    )
+    
+    page.add(
+        encabezado,
         ft.Divider(),
-        
         ft.Column([
             ft.ElevatedButton("Panel de Control", on_click=lambda e: abrir_panel_control(page)),
             ft.ElevatedButton("Gestión de Empleados", on_click=lambda e: abrir_gestion_empleados(page)),
@@ -166,6 +170,7 @@ def mostrar_menu_principal(page):
         ], alignment=ft.MainAxisAlignment.CENTER)
     )
     page.update()
+
 
 def abrir_gestion_empleados(page):
     page.controls.clear()
