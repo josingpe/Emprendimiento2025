@@ -283,15 +283,15 @@ def abrir_gestion_empleados(page):
     
     # Secciones con 8 campos por línea
     datos_personales = ft.Column([
-        ft.Text("Datos Personales", size=14, weight=ft.FontWeight.BOLD),
+        ft.Text("Datos Personales", size=10, weight=ft.FontWeight.BOLD),
         ft.Row([nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento], spacing=15),
         ft.Row([edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago], spacing=15)
-    ], spacing=15)
+    ], spacing=10)
     
     datos_bancarios = ft.Column([
-        ft.Text("Información Bancaria", size=14, weight=ft.FontWeight.BOLD),
+        ft.Text("Información Bancaria", size=10, weight=ft.FontWeight.BOLD),
         ft.Row([estatus, banco, numero_cuenta, codigo_empleado], spacing=10)
-    ], spacing=15)
+    ], spacing=10)
 
     # Botones centrados
     botones = ft.Row([
