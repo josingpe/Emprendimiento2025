@@ -313,7 +313,6 @@ def abrir_gestion_empleados(page):
         subprocess.Popen(["start", "excel", archivo_excel], shell=True)
     
     
-    
     # Agregar todo a la página con barra de desplazamiento
     page.add(
         ft.Container(
