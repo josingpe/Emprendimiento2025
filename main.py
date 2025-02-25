@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import sqlite3
 import flet as ft
+import subprocess
 
 # Función para encriptar la clave con SHA-256
 def encriptar_clave(clave):
