@@ -210,10 +210,11 @@ def guardar_empleado(page, inputs):
         page.update()
 
 # Función para mostrar la gestión de empleados
-import flet as ft
+
+    
+    import flet as ft
 import sqlite3
 from datetime import datetime
-
 
 def abrir_gestion_empleados(page):
     page.controls.clear()
@@ -301,17 +302,6 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
-    
-
-    def abrir_reportes(e):
-        conn = sqlite3.connect("empleados.db")
-        df = pd.read_sql_query("SELECT * FROM empleados", conn)
-        conn.close()
-        archivo_excel = "Reporte_Empleados.xlsx"
-        df.to_excel(archivo_excel, index=False)
-        print(f"Reporte generado: {archivo_excel}")
-        subprocess.Popen(["start", "excel", archivo_excel], shell=True)
-    
     
     # Agregar todo a la página con barra de desplazamiento
     page.add(
