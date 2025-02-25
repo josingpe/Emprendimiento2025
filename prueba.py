@@ -3,6 +3,7 @@ from datetime import datetime
 import sqlite3
 import pandas as pd
 import subprocess
+import os
 import main
 
 def abrir_gestion_empleados(page):
@@ -37,18 +38,24 @@ def abrir_gestion_empleados(page):
                     tipo_pago TEXT, estatus TEXT, banco TEXT, numero_cuenta TEXT
                 )
             """)
-            c.execute("""
-                INSERT INTO empleados (nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento, edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus, banco, numero_cuenta) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
-                (nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value)
-            )
-            empleado_id = c.lastrowid
-            codigo_empleado.value = f"EMP{empleado_id:04d}"
-            page.update()
-            print("Empleado guardado con éxito.")
+            try:
+                c.execute("""
+                    INSERT INTO empleados (nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento, edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus, banco, numero_cuenta) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                    (nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value)
+                )
+                empleado_id = c.lastrowid
+                codigo_empleado.value = f"EMP{empleado_id:04d}"
+                page.update()
+                print("Empleado guardado con éxito.")
+            except sqlite3.IntegrityError:
+                print("Error: La cédula ya está registrada.")
     
     def regresar_menu(e):
-        main.menu_principal(page)
+        try:
+            main.menu_principal(page)
+        except Exception as ex:
+            print(f"Error al regresar al menú: {ex}")
     
     def abrir_reportes(e):
         with sqlite3.connect("empleados.db") as conn:
@@ -56,7 +63,16 @@ def abrir_gestion_empleados(page):
         archivo_excel = "Reporte_Empleados.xlsx"
         df.to_excel(archivo_excel, index=False)
         print(f"Reporte generado: {archivo_excel}")
-        subprocess.run(["start", "excel", archivo_excel], shell=True)
+        
+        try:
+            if os.name == "nt":
+                os.startfile(archivo_excel)  # Windows
+            elif os.uname().sysname == "Darwin":
+                subprocess.run(["open", archivo_excel])  # macOS
+            else:
+                subprocess.run(["xdg-open", archivo_excel])  # Linux
+        except Exception as ex:
+            print(f"Error al abrir el archivo: {ex}")
     
     opciones_sexo = ["Masculino", "Femenino"]
     opciones_estado_civil = ["Soltero", "Casado", "Divorciado"]
@@ -79,29 +95,6 @@ def abrir_gestion_empleados(page):
     banco, numero_cuenta = ft.TextField(label="Banco", width=150), ft.TextField(label="Número de Cuenta", width=200)
     codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
     
-    datos_personales = ft.Column([
-        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([nombre1, nombre2]),
-        ft.Row([apellido1, apellido2]),
-        ft.Row([cedula, correo]),
-        ft.Row([direccion]),
-        ft.Row([fecha_nacimiento, edad]),
-        ft.Row([sexo, estado_civil]),
-    ], spacing=5)
-    
-    datos_laborales = ft.Column([
-        ft.Text("Datos Laborales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([cargo, departamento]),
-        ft.Row([fecha_ingreso, centro_costo]),
-        ft.Row([tipo_pago, estatus]),
-    ], spacing=5)
-    
-    datos_bancarios = ft.Column([
-        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([banco, numero_cuenta]),
-        ft.Row([codigo_empleado]),
-    ], spacing=5)
-    
     botones = ft.Row([
         ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado),
         ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu),
@@ -112,9 +105,6 @@ def abrir_gestion_empleados(page):
         ft.Container(
             content=ft.Column([
                 ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
-                datos_personales,
-                datos_laborales,
-                datos_bancarios,
                 botones
             ], spacing=10, scroll=ft.ScrollMode.ALWAYS),
             expand=True,
@@ -122,6 +112,5 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
-
 
 
