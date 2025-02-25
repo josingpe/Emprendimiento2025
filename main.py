@@ -234,7 +234,6 @@ def abrir_gestion_empleados(page):
     def regresar_menu(e):
         from main import menu_principal as mostrar_menu_principal
 
-        menu_principal(page)
     def abrir_reportes(e):
         conn = sqlite3.connect("empleados.db")
         df = pd.read_sql_query("SELECT * FROM empleados", conn)
