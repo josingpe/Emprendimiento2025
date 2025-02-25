@@ -5,9 +5,7 @@ import os
 import pandas as pd
 from datetime import datetime
 import flet as ft
-import main
 
-main.mostrar_menu_principal(page)
 
 # Función para encriptar la clave con SHA-256
 def encriptar_clave(clave):

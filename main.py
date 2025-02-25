@@ -352,7 +352,3 @@ def main(page: ft.Page):
     mostrar_login(page)  # Muestra la pantalla de inicio de sesión
 
 ft.app(target=main)
-
-
-
-
