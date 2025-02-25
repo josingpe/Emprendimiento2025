@@ -12,6 +12,17 @@ def menu_principal(page):
     page.add(ft.Text("Menú Principal"))
     page.update()
 
+import requests
+
+# Función para obtener la tasa del dolar 
+def obtener_tasa_dolar():
+    try:
+        response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
+        data = response.json()
+        return data["rates"].get("VES", "No disponible")
+    except Exception as e:
+        print(f"Error obteniendo la tasa: {e}")
+        return "Error"
 
 
 # Función para encriptar la clave con SHA-256
