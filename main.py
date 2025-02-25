@@ -429,4 +429,6 @@ def main(page: ft.Page):
     page.title = "Sistema de Nómina"
     mostrar_login(page)  # Muestra la pantalla de inicio de sesión
 
-ft.app(target=main)
+if __name__ == "__main__":
+    ft.app(target=main)
+
