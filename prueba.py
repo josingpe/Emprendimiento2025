@@ -3,7 +3,7 @@ from datetime import datetime
 import sqlite3
 import pandas as pd
 import subprocess
-import main  # Importar el módulo sin llamar directamente a funciones
+import main
 
 def abrir_gestion_empleados(page):
     page.controls.clear()
@@ -21,33 +21,48 @@ def abrir_gestion_empleados(page):
         page.update()
     
     def guardar_empleado(e):
-        conn = sqlite3.connect("empleados.db")
-        c = conn.cursor()
-        c.execute("""
-            INSERT INTO empleados (nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento, edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus, banco, numero_cuenta) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
-            (nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value))
+        if not nombre1.value or not apellido1.value or not cedula.value:
+            print("Campos obligatorios faltantes")
+            return
         
-        conn.commit()
-        empleado_id = c.lastrowid  # Obtener el ID del empleado recién insertado
-        conn.close()
-        codigo_empleado.value = f"EMP{empleado_id:04d}"
-        page.update()
-        print("Empleado guardado con éxito.")
+        with sqlite3.connect("empleados.db") as conn:
+            c = conn.cursor()
+            c.execute("""
+                CREATE TABLE IF NOT EXISTS empleados (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre1 TEXT, nombre2 TEXT, apellido1 TEXT, apellido2 TEXT,
+                    cedula TEXT UNIQUE, correo TEXT, direccion TEXT, fecha_nacimiento TEXT,
+                    edad TEXT, sexo TEXT, estado_civil TEXT, cargo TEXT,
+                    departamento TEXT, fecha_ingreso TEXT, centro_costo TEXT,
+                    tipo_pago TEXT, estatus TEXT, banco TEXT, numero_cuenta TEXT
+                )
+            """)
+            c.execute("""
+                INSERT INTO empleados (nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento, edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus, banco, numero_cuenta) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                (nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value)
+            )
+            empleado_id = c.lastrowid
+            codigo_empleado.value = f"EMP{empleado_id:04d}"
+            page.update()
+            print("Empleado guardado con éxito.")
     
     def regresar_menu(e):
-        main.menu_principal(page)  # Evita importaciones circulares
+        main.menu_principal(page)
     
     def abrir_reportes(e):
-        conn = sqlite3.connect("empleados.db")
-        df = pd.read_sql_query("SELECT * FROM empleados", conn)
-        conn.close()
+        with sqlite3.connect("empleados.db") as conn:
+            df = pd.read_sql_query("SELECT * FROM empleados", conn)
         archivo_excel = "Reporte_Empleados.xlsx"
         df.to_excel(archivo_excel, index=False)
         print(f"Reporte generado: {archivo_excel}")
-        subprocess.Popen(["start", "excel", archivo_excel], shell=True)
+        subprocess.run(["start", "excel", archivo_excel], shell=True)
     
-    # Campos de entrada
+    opciones_sexo = ["Masculino", "Femenino"]
+    opciones_estado_civil = ["Soltero", "Casado", "Divorciado"]
+    opciones_tipo_pago = ["Mensual", "Quincenal"]
+    opciones_estatus = ["Activo", "Inactivo"]
+    
     nombre1, nombre2 = ft.TextField(label="1° Nombre", width=150), ft.TextField(label="2° Nombre", width=150)
     apellido1, apellido2 = ft.TextField(label="1° Apellido", width=150), ft.TextField(label="2° Apellido", width=150)
     cedula, correo = ft.TextField(label="Cédula", width=150), ft.TextField(label="Correo", width=200)
@@ -55,16 +70,15 @@ def abrir_gestion_empleados(page):
     fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=150)
     edad = ft.TextField(label="Edad", width=80, disabled=True)
     fecha_nacimiento.on_change = actualizar_edad
-    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
-    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=150)
+    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option(opt) for opt in opciones_sexo], width=150)
+    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option(opt) for opt in opciones_estado_civil], width=150)
     cargo, departamento = ft.TextField(label="Cargo", width=150), ft.TextField(label="Departamento", width=150)
     fecha_ingreso, centro_costo = ft.TextField(label="Fecha de Ingreso", width=150), ft.TextField(label="Centro de Costo", width=150)
-    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=150)
-    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option(opt) for opt in opciones_tipo_pago], width=150)
+    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option(opt) for opt in opciones_estatus], width=150)
     banco, numero_cuenta = ft.TextField(label="Banco", width=150), ft.TextField(label="Número de Cuenta", width=200)
     codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
     
-    # Secciones
     datos_personales = ft.Column([
         ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
         ft.Row([nombre1, nombre2]),
@@ -88,14 +102,12 @@ def abrir_gestion_empleados(page):
         ft.Row([codigo_empleado]),
     ], spacing=5)
     
-    # Botones
     botones = ft.Row([
         ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado),
         ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu),
         ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes)
     ], alignment=ft.MainAxisAlignment.CENTER)
     
-    # Agregar todo a la página con barra de desplazamiento
     page.add(
         ft.Container(
             content=ft.Column([
@@ -110,3 +122,6 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
+
+
+
