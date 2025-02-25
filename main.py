@@ -232,7 +232,9 @@ def abrir_gestion_empleados(page):
         print("Empleado guardado con éxito.")
     
     def regresar_menu(e):
-        from main import menu_principal as mostrar_menu_principal
+   
+        mostrar_menu_principal(page)  # Llama correctamente la función
+    
 
     def abrir_reportes(e):
         conn = sqlite3.connect("empleados.db")
