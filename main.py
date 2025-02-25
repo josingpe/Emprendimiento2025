@@ -267,7 +267,7 @@ def abrir_gestion_empleados(page):
     correo = ft.TextField(label="Correo", width=300)
     direccion = ft.TextField(label="Dirección", width=250)
     fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=100)
-    edad = ft.TextField(label="Edad", width=60, disabled=True)
+    edad = ft.TextField(label="Edad", width=80, disabled=True)
     fecha_nacimiento.on_change = actualizar_edad
     sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
     estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=200)
@@ -275,11 +275,11 @@ def abrir_gestion_empleados(page):
     departamento = ft.TextField(label="Departamento", width=150)
     fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=150)
     centro_costo = ft.TextField(label="Centro de Costo", width=150)
-    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=150)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=180)
     estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
     banco = ft.TextField(label="Banco", width=150)
     numero_cuenta = ft.TextField(label="Número de Cuenta", width=250)
-    codigo_empleado = ft.TextField(label="Código de Empleado", width=100, disabled=True)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
     
     # Secciones con 8 campos por línea
     datos_personales = ft.Column([
