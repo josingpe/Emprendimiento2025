@@ -7,6 +7,8 @@ import sqlite3
 import flet as ft
 import subprocess
 from datetime import datetime
+import requests
+import main
 def menu_principal(page):
     page.controls.clear()
     page.add(ft.Text("Menú Principal"))
@@ -109,29 +111,58 @@ def mostrar_login(page):
     page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
     page.update()
 
+# Función para obtener el valor del dolar en tiempo real
+def obtener_tasa_dolar():
+    try:
+        response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
+        data = response.json()
+        return data["rates"].get("VES", "No disponible")
+    except Exception as e:
+        print(f"Error obteniendo la tasa: {e}")
+
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
+    
+    tasa = ft.Text(f"Tasa USD/VES: {obtener_tasa_dolar()}", size=16, weight=ft.FontWeight.BOLD, color="blue")
+    fecha_hora = ft.Text(f"Fecha y hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", size=14, color="gray")
+    
+    def actualizar_tasa(e):
+        tasa.value = f"Tasa USD/VES: {obtener_tasa_dolar()}"
+        fecha_hora.value = f"Fecha y hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        page.update()
+    
     page.add(
-        ft.Column(
-            [
-                ft.Text("Menú Principal", size=24, weight=ft.FontWeight.BOLD),
-                ft.Divider(),  # Línea divisoria para organización visual
-                
-                ft.ElevatedButton("Panel de Control", on_click=lambda e: abrir_panel_control(page)),
-                ft.ElevatedButton("Gestión de Empleados", on_click=lambda e: abrir_gestion_empleados(page)),
-                ft.ElevatedButton("Cálculo de Nómina", on_click=lambda e: abrir_calculo_nomina(page)),
-                ft.ElevatedButton("Reportes", on_click=lambda e: abrir_reportes(page)),
-                ft.ElevatedButton("Configuración", on_click=lambda e: abrir_configuracion(page)),
-
-                ft.Divider(),  # Separador antes de cerrar sesión
-                ft.ElevatedButton("Cerrar Sesión", on_click=lambda e: mostrar_login(page), bgcolor="red", color="white"),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        )
+        ft.Row([
+            ft.Text("Menú Principal", size=24, weight=ft.FontWeight.BOLD),
+            ft.Container(
+                content=ft.Row([
+                    tasa,
+                    ft.ElevatedButton("Actualizar", icon=ft.Icons.REFRESH, on_click=actualizar_tasa)
+                ], alignment=ft.MainAxisAlignment.END),
+                alignment=ft.alignment.top_right
+            )
+        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+        ft.Divider(),
+        
+        ft.Column([
+            ft.ElevatedButton("Panel de Control", on_click=lambda e: abrir_panel_control(page)),
+            ft.ElevatedButton("Gestión de Empleados", on_click=lambda e: abrir_gestion_empleados(page)),
+            ft.ElevatedButton("Cálculo de Nómina", on_click=lambda e: abrir_calculo_nomina(page)),
+            ft.ElevatedButton("Reportes", on_click=lambda e: abrir_reportes(page)),
+            ft.ElevatedButton("Configuración", on_click=lambda e: abrir_configuracion(page)),
+            
+            ft.Divider(),
+            ft.ElevatedButton("Cerrar Sesión", on_click=lambda e: mostrar_login(page), bgcolor="red", color="white"),
+            
+            ft.Container(
+                content=fecha_hora,
+                alignment=ft.alignment.bottom_center
+            )
+        ], alignment=ft.MainAxisAlignment.CENTER)
     )
     page.update()
+
 
 
 # Función para generar un código único para empleados
