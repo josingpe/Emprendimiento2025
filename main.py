@@ -224,7 +224,7 @@ def abrir_gestion_empleados(page):
         except ValueError:
             edad.value = "Fecha inválida"
         page.update()
-    
+
     def guardar_empleado(e):
         conn = sqlite3.connect("empleados.db")
         c = conn.cursor()
@@ -238,8 +238,80 @@ def abrir_gestion_empleados(page):
         print("Empleado guardado con éxito.")
     
     def regresar_menu(e):
+        mostrar_menu_principal(page)
+
+    # Campos de entrada
+    nombre1 = ft.TextField(label="1° Nombre", width=150)
+    nombre2 = ft.TextField(label="2° Nombre", width=150)
+    apellido1 = ft.TextField(label="1° Apellido", width=150)
+    apellido2 = ft.TextField(label="2° Apellido", width=150)
+    cedula = ft.TextField(label="Cédula", width=150)
+    correo = ft.TextField(label="Correo", width=200)
+    direccion = ft.TextField(label="Dirección", width=310)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=150)
+    edad = ft.TextField(label="Edad", width=80, disabled=True)
+    fecha_nacimiento.on_change = actualizar_edad
+    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
+    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=150)
+    cargo = ft.TextField(label="Cargo", width=150)
+    departamento = ft.TextField(label="Departamento", width=150)
+    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=150)
+    centro_costo = ft.TextField(label="Centro de Costo", width=150)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=150)
+    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
+    banco = ft.TextField(label="Banco", width=150)
+    numero_cuenta = ft.TextField(label="Número de Cuenta", width=200)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
+    
+    # Secciones de datos con títulos
+    datos_personales = ft.Column([ 
+        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([nombre1, nombre2], spacing=10),
+        ft.Row([apellido1, apellido2], spacing=10),
+        ft.Row([cedula, correo], spacing=10),
+        ft.Row([direccion], spacing=10),
+        ft.Row([fecha_nacimiento, edad], spacing=10),
+        ft.Row([sexo, estado_civil], spacing=10),
+    ], spacing=15)
+    
+    datos_laborales = ft.Column([
+        ft.Text("Datos Laborales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([cargo, departamento], spacing=10),
+        ft.Row([fecha_ingreso, centro_costo], spacing=10),
+        ft.Row([tipo_pago, estatus], spacing=10),
+    ], spacing=15)
+    
+    datos_bancarios = ft.Column([
+        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([banco, numero_cuenta], spacing=10),
+        ft.Row([codigo_empleado], spacing=10),
+    ], spacing=15)
+
+    # Botones
+    botones = ft.Row([
+        ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado, bgcolor="#2196F3", color="white"),
+        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white")
+    ], alignment=ft.MainAxisAlignment.CENTER, spacing=20)
+    
+    # Agregar todo a la página con barra de desplazamiento
+    page.add(
+        ft.Container(
+            content=ft.Column([
+                ft.Text("Gestión de Empleados", size=24, weight=ft.FontWeight.BOLD, color="#2196F3"),
+                ft.Divider(),  # Separador
+                datos_personales,
+                datos_laborales,
+                datos_bancarios,
+                botones
+            ], spacing=20, scroll=ft.ScrollMode.ALWAYS),
+            expand=True,
+            padding=20
+        )
+    )
+    page.update()
+
    
-        mostrar_menu_principal(page)  # Llama correctamente la función
+       
     
 
     def abrir_reportes(e):
