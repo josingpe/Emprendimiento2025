@@ -219,6 +219,12 @@ import flet as ft
 import sqlite3
 from datetime import datetime
 
+import flet as ft
+import sqlite3
+import os
+import platform
+from datetime import datetime
+
 def abrir_gestion_empleados(page):
     page.controls.clear()
 
@@ -256,42 +262,50 @@ def abrir_gestion_empleados(page):
         archivo_excel = "Reporte_Empleados.xlsx"
         df.to_excel(archivo_excel, index=False)
         print(f"Reporte generado: {archivo_excel}")
-        subprocess.Popen(["start", "excel", archivo_excel], shell=True)
+        if platform.system() == "Windows":
+            os.startfile(archivo_excel)
+        elif platform.system() == "Darwin":  # macOS
+            os.system(f"open {archivo_excel}")
+        else:  # Linux
+            os.system(f"xdg-open {archivo_excel}")
 
-    # Campos de entrada con mayor ancho
-    nombre1 = ft.TextField(label="1° Nombre", width=150)
-    nombre2 = ft.TextField(label="2° Nombre", width=150)
-    apellido1 = ft.TextField(label="1° Apellido", width=150)
-    apellido2 = ft.TextField(label="2° Apellido", width=150)
-    cedula = ft.TextField(label="Cédula", width=150)
-    correo = ft.TextField(label="Correo", width=300)
-    direccion = ft.TextField(label="Dirección", width=250)
-    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=100)
-    edad = ft.TextField(label="Edad", width=80, disabled=True)
+    # Campos de entrada con ajuste de tamaño
+    input_width = 250
+    nombre1 = ft.TextField(label="1° Nombre", width=input_width)
+    nombre2 = ft.TextField(label="2° Nombre", width=input_width)
+    apellido1 = ft.TextField(label="1° Apellido", width=input_width)
+    apellido2 = ft.TextField(label="2° Apellido", width=input_width)
+    cedula = ft.TextField(label="Cédula", width=input_width)
+    correo = ft.TextField(label="Correo", width=input_width)
+    direccion = ft.TextField(label="Dirección", width=input_width)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=input_width)
+    edad = ft.TextField(label="Edad", width=100, disabled=True)
     fecha_nacimiento.on_change = actualizar_edad
-    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
-    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=200)
-    cargo = ft.TextField(label="Cargo", width=150)
-    departamento = ft.TextField(label="Departamento", width=150)
-    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=150)
-    centro_costo = ft.TextField(label="Centro de Costo", width=150)
-    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=180)
-    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
-    banco = ft.TextField(label="Banco", width=150)
-    numero_cuenta = ft.TextField(label="Número de Cuenta", width=250)
-    codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
+    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=input_width)
+    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=input_width)
+    cargo = ft.TextField(label="Cargo", width=input_width)
+    departamento = ft.TextField(label="Departamento", width=input_width)
+    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=input_width)
+    centro_costo = ft.TextField(label="Centro de Costo", width=input_width)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=input_width)
+    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=input_width)
+    banco = ft.TextField(label="Banco", width=input_width)
+    numero_cuenta = ft.TextField(label="Número de Cuenta", width=input_width)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=input_width, disabled=True)
     
-    # Secciones con 8 campos por línea
+    # Secciones con 4 campos por fila
     datos_personales = ft.Column([
-        ft.Text("Datos Personales", size=10, weight=ft.FontWeight.BOLD),
-        ft.Row([nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento], spacing=15),
-        ft.Row([edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago], spacing=15)
-    ], spacing=10)
+        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([nombre1, nombre2, apellido1, apellido2], spacing=10),
+        ft.Row([cedula, correo, direccion, fecha_nacimiento], spacing=10),
+        ft.Row([edad, sexo, estado_civil, cargo], spacing=10),
+        ft.Row([departamento, fecha_ingreso, centro_costo, tipo_pago], spacing=10)
+    ], spacing=15)
     
     datos_bancarios = ft.Column([
-        ft.Text("Información Bancaria", size=10, weight=ft.FontWeight.BOLD),
+        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
         ft.Row([estatus, banco, numero_cuenta, codigo_empleado], spacing=10)
-    ], spacing=10)
+    ], spacing=15)
 
     # Botones centrados
     botones = ft.Row([
