@@ -248,28 +248,28 @@ def abrir_gestion_empleados(page):
     def regresar_menu(e):
         mostrar_menu_principal(page)
 
-    # Campos de entrada
-    nombre1 = ft.TextField(label="1° Nombre", width=120)
-    nombre2 = ft.TextField(label="2° Nombre", width=120)
-    apellido1 = ft.TextField(label="1° Apellido", width=120)
-    apellido2 = ft.TextField(label="2° Apellido", width=120)
-    cedula = ft.TextField(label="Cédula", width=120)
-    correo = ft.TextField(label="Correo", width=140)
-    direccion = ft.TextField(label="Dirección", width=140)
-    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=120)
-    edad = ft.TextField(label="Edad", width=80, disabled=True)
+    # Campos de entrada con mayor ancho
+    nombre1 = ft.TextField(label="1° Nombre", width=200)
+    nombre2 = ft.TextField(label="2° Nombre", width=200)
+    apellido1 = ft.TextField(label="1° Apellido", width=200)
+    apellido2 = ft.TextField(label="2° Apellido", width=200)
+    cedula = ft.TextField(label="Cédula", width=200)
+    correo = ft.TextField(label="Correo", width=250)
+    direccion = ft.TextField(label="Dirección", width=250)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=200)
+    edad = ft.TextField(label="Edad", width=100, disabled=True)
     fecha_nacimiento.on_change = actualizar_edad
-    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=120)
-    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=120)
-    cargo = ft.TextField(label="Cargo", width=120)
-    departamento = ft.TextField(label="Departamento", width=120)
-    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=120)
-    centro_costo = ft.TextField(label="Centro de Costo", width=120)
-    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=120)
-    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=120)
-    banco = ft.TextField(label="Banco", width=120)
-    numero_cuenta = ft.TextField(label="Número de Cuenta", width=140)
-    codigo_empleado = ft.TextField(label="Código de Empleado", width=120, disabled=True)
+    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=200)
+    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=200)
+    cargo = ft.TextField(label="Cargo", width=200)
+    departamento = ft.TextField(label="Departamento", width=200)
+    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=200)
+    centro_costo = ft.TextField(label="Centro de Costo", width=200)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=200)
+    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=200)
+    banco = ft.TextField(label="Banco", width=200)
+    numero_cuenta = ft.TextField(label="Número de Cuenta", width=250)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=200, disabled=True)
     
     # Secciones con 8 campos por línea
     datos_personales = ft.Column([
@@ -304,9 +304,6 @@ def abrir_gestion_empleados(page):
         )
     )
     page.update()
-
-
-       
     
 
     def abrir_reportes(e):
