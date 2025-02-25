@@ -300,10 +300,9 @@ def abrir_gestion_empleados(page):
             padding=20
         )
 
-
         
     )
-    
+    page.update()
     
 
     def abrir_reportes(e):
