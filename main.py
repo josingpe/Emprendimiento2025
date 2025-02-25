@@ -283,8 +283,8 @@ def abrir_gestion_empleados(page):
     # Botones centrados
     botones = ft.Row([
         ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado, bgcolor="#2196F3", color="white"),
-        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white"),
-        ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes)
+        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white")
+        
     ], alignment=ft.MainAxisAlignment.CENTER, spacing=20)
     
     # Agregar todo a la página sin división
