@@ -268,9 +268,24 @@ def abrir_gestion_empleados(page):
             os.system(f"open {archivo_excel}")
         else:  # Linux
             os.system(f"xdg-open {archivo_excel}")
+    
+    def consultar_empleado(e):
+        conn = sqlite3.connect("empleados.db")
+        c = conn.cursor()
+        c.execute("SELECT * FROM empleados WHERE cedula = ?", (consulta_cedula.value,))
+        empleado = c.fetchone()
+        conn.close()
+        if empleado:
+            nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value = empleado[1:]
+        else:
+            print("Empleado no encontrado.")
+        page.update()
 
     # Campos de entrada con ajuste de tamaño
     input_width = 250
+    consulta_cedula = ft.TextField(label="Consultar por Cédula", width=input_width)
+    boton_consulta = ft.ElevatedButton("Buscar", icon=ft.Icons.SEARCH, on_click=consultar_empleado)
+    
     nombre1 = ft.TextField(label="1° Nombre", width=input_width)
     nombre2 = ft.TextField(label="2° Nombre", width=input_width)
     apellido1 = ft.TextField(label="1° Apellido", width=input_width)
@@ -296,6 +311,7 @@ def abrir_gestion_empleados(page):
     # Secciones con 4 campos por fila
     datos_personales = ft.Column([
         ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([consulta_cedula, boton_consulta]),
         ft.Row([nombre1, nombre2, apellido1, apellido2], spacing=10),
         ft.Row([cedula, correo, direccion, fecha_nacimiento], spacing=10),
         ft.Row([edad, sexo, estado_civil, cargo], spacing=10),
