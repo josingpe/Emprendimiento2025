@@ -204,63 +204,158 @@ def guardar_empleado(page, inputs):
         page.snack_bar = ft.SnackBar(content=ft.Text(f"Error en la base de datos: {e}"), open=True)
         page.update()
 
-
 # Función para mostrar la gestión de empleados
+import flet as ft
+from datetime import datetime
+import sqlite3
+
+# Conectar a la base de datos
+conn = sqlite3.connect("empleados.db")
+c = conn.cursor()
+c.execute('''CREATE TABLE IF NOT EXISTS empleados (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre1 TEXT,
+                nombre2 TEXT,
+                apellido1 TEXT,
+                apellido2 TEXT,
+                cedula TEXT,
+                correo TEXT,
+                direccion TEXT,
+                fecha_nacimiento TEXT,
+                edad INTEGER,
+                sexo TEXT,
+                estado_civil TEXT,
+                cargo TEXT,
+                departamento TEXT,
+                fecha_ingreso TEXT,
+                centro_costo TEXT,
+                tipo_pago TEXT,
+                estatus TEXT,
+                banco TEXT,
+                numero_cuenta TEXT
+            )''')
+conn.commit()
+
+import flet as ft
+from datetime import datetime
+import sqlite3
+
+import flet as ft
+from datetime import datetime
+import sqlite3
+import pandas as pd
+import subprocess
+import main  # Importar el módulo sin llamar directamente a funciones
+
 def abrir_gestion_empleados(page):
     page.controls.clear()
-    inputs = {}
-    labels = ["Código", "1° Nombre", "2° Nombre", "1° Apellido", "2° Apellido", "Cédula", "Correo",
-              "Dirección", "País", "Ciudad", "Estado", "Fecha de Nacimiento", "Edad", "Grado de Instrucción", 
-              "Carga Familiar", "Sexo","Estado Civil","Teléfono",  # Campos personales
-              "Profesión", "Cargo", "Departamento", "Nomina", "División", "Banco", "Cuenta",  # Nuevos campos laborales
-              "Fecha de Ingreso", "Centro de Costo", "Estatus", "Tipo de Pago"]  # Más campos laborales
-
-    for label in labels:
-        inputs[label] = ft.TextField(label=label, width=180, height=40)
-
-    inputs["Código"].value = generar_codigo_empleado()
-    inputs["Código"].disabled = True
-
-    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento (YYYY-MM-DD)", width=180, height=40)
-    inputs["Fecha de Nacimiento"] = fecha_nacimiento
-
-    edad = ft.TextField(label="Edad", width=180, height=40, disabled=True)
-    inputs["Edad"] = edad
+    
+    def calcular_edad(fecha_nacimiento):
+        hoy = datetime.today()
+        return hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
 
     def actualizar_edad(e):
         try:
             fecha_valida = datetime.strptime(fecha_nacimiento.value, "%Y-%m-%d")
-            edad.value = calcular_edad(fecha_valida)
+            edad.value = str(calcular_edad(fecha_valida))
         except ValueError:
             edad.value = "Fecha inválida"
         page.update()
-
+    
+    def guardar_empleado(e):
+        conn = sqlite3.connect("empleados.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO empleados (nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento, edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus, banco, numero_cuenta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+                  (nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value))
+        conn.commit()
+        empleado_id = c.lastrowid  # Obtener el ID del empleado recién insertado
+        conn.close()
+        codigo_empleado.value = f"EMP{empleado_id:04d}"
+        page.update()
+        print("Empleado guardado con éxito.")
+    
+    def regresar_menu(e):
+        main.menu_principal(page)  # Evita importaciones circulares
+    
+    def abrir_reportes(e):
+        conn = sqlite3.connect("empleados.db")
+        df = pd.read_sql_query("SELECT * FROM empleados", conn)
+        conn.close()
+        archivo_excel = "Reporte_Empleados.xlsx"
+        df.to_excel(archivo_excel, index=False)
+        print(f"Reporte generado: {archivo_excel}")
+        subprocess.Popen(["start", "excel", archivo_excel], shell=True)
+    
+    # Campos de entrada
+    nombre1 = ft.TextField(label="1° Nombre", width=150)
+    nombre2 = ft.TextField(label="2° Nombre", width=150)
+    apellido1 = ft.TextField(label="1° Apellido", width=150)
+    apellido2 = ft.TextField(label="2° Apellido", width=150)
+    cedula = ft.TextField(label="Cédula", width=150)
+    correo = ft.TextField(label="Correo", width=200)
+    direccion = ft.TextField(label="Dirección", width=310)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=150)
+    edad = ft.TextField(label="Edad", width=80, disabled=True)
     fecha_nacimiento.on_change = actualizar_edad
-
-    guardar_button = ft.ElevatedButton("Guardar", on_click=lambda e: guardar_empleado(page, inputs))
-    regresar_button = ft.ElevatedButton("Regresar", on_click=lambda e: mostrar_menu_principal(page))
-
-    campos_por_fila = 3
-    filas = [
-        ft.Row([inputs[label] for label in labels[i:i + campos_por_fila]], spacing=5,
-               alignment=ft.MainAxisAlignment.CENTER)
-        for i in range(0, len(labels), campos_por_fila)
-    ]
-
+    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
+    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=150)
+    cargo = ft.TextField(label="Cargo", width=150)
+    departamento = ft.TextField(label="Departamento", width=150)
+    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=150)
+    centro_costo = ft.TextField(label="Centro de Costo", width=150)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=150)
+    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
+    banco = ft.TextField(label="Banco", width=150)
+    numero_cuenta = ft.TextField(label="Número de Cuenta", width=200)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
+    
+    # Secciones
+    datos_personales = ft.Column([
+        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([nombre1, nombre2]),
+        ft.Row([apellido1, apellido2]),
+        ft.Row([cedula, correo]),
+        ft.Row([direccion]),
+        ft.Row([fecha_nacimiento, edad]),
+        ft.Row([sexo, estado_civil]),
+    ], spacing=5)
+    
+    datos_laborales = ft.Column([
+        ft.Text("Datos Laborales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([cargo, departamento]),
+        ft.Row([fecha_ingreso, centro_costo]),
+        ft.Row([tipo_pago, estatus]),
+    ], spacing=5)
+    
+    datos_bancarios = ft.Column([
+        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([banco, numero_cuenta]),
+        ft.Row([codigo_empleado]),
+    ], spacing=5)
+    
+    # Botones
+    botones = ft.Row([
+        ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado),
+        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu),
+        ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes)
+    ], alignment=ft.MainAxisAlignment.CENTER)
+    
+    # Agregar todo a la página con barra de desplazamiento
     page.add(
-        ft.Column(
-            [
+        ft.Container(
+            content=ft.Column([
                 ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
-                *filas,
-                ft.Row([guardar_button, regresar_button], alignment=ft.MainAxisAlignment.CENTER)
-            ],
-            scroll=ft.ScrollMode.ALWAYS,
-            alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                datos_personales,
+                datos_laborales,
+                datos_bancarios,
+                botones
+            ], spacing=10, scroll=ft.ScrollMode.ALWAYS),
+            expand=True,
+            padding=10
         )
     )
-
     page.update()
+
 
 
 
