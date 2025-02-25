@@ -115,22 +115,6 @@ def mostrar_login(page):
 
 
 # Función para mostrar el menú principal
-import flet as ft
-from datetime import datetime
-import requests
-
-# Función para mostrar el menú principal
-
-def obtener_tasa_dolar():
-    try:
-        response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
-        data = response.json()
-        return data["rates"].get("VES", "No disponible")
-    except Exception as e:
-        print(f"Error obteniendo la tasa: {e}")
-        return "Error"
-
-# Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
     page.add(
@@ -150,41 +134,6 @@ def mostrar_menu_principal(page):
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        )
-    )
-    page.update()
-
-
-
-def abrir_gestion_empleados(page):
-    page.controls.clear()
-    
-    tasa = ft.Text(f"USD/VES: {obtener_tasa_dolar()}", size=16, weight=ft.FontWeight.BOLD, color="blue")
-    
-    def actualizar_tasa(e):
-        tasa.value = f"USD/VES: {obtener_tasa_dolar()}"
-        page.update()
-    
-    def regresar_menu(e):
-        try:
-            mostrar_menu_principal(page)
-        except Exception as ex:
-            print(f"Error al regresar al menú: {ex}")
-    
-    botones = ft.Row([
-        ft.ElevatedButton("Actualizar Tasa", icon=ft.Icons.REFRESH, on_click=actualizar_tasa),
-        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu)
-    ], alignment=ft.MainAxisAlignment.CENTER)
-    
-    page.add(
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
-                tasa,
-                botones
-            ], spacing=10, scroll=ft.ScrollMode.ALWAYS),
-            expand=True,
-            padding=10
         )
     )
     page.update()
