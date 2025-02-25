@@ -303,7 +303,7 @@ def abrir_gestion_empleados(page):
 
         
     )
-    page.update()
+    
     
 
     def abrir_reportes(e):
