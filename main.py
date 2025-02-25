@@ -218,6 +218,12 @@ import os
 import platform
 from datetime import datetime
 
+import flet as ft
+import sqlite3
+import os
+import platform
+from datetime import datetime
+
 def abrir_gestion_empleados(page):
     page.controls.clear()
 
@@ -305,19 +311,32 @@ def abrir_gestion_empleados(page):
     numero_cuenta = ft.TextField(label="Número de Cuenta", width=input_width, **textfield_style)
     codigo_empleado = ft.TextField(label="Código de Empleado", width=input_width, disabled=True, **textfield_style)
     
-    # Agregar todo a la página sin división
+    # Secciones
+    datos_personales = ft.Column([
+        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([nombre1, nombre2, apellido1, apellido2]),
+        ft.Row([cedula, correo, direccion, fecha_nacimiento])
+    ], spacing=10)
+    
+    datos_bancarios = ft.Column([
+        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
+        ft.Row([estatus, banco, numero_cuenta, codigo_empleado])
+    ], spacing=10)
+    
+    botones = ft.Row([
+        ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado),
+        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu),
+        ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes)
+    ], alignment=ft.MainAxisAlignment.CENTER)
+    
     page.add(
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Gestión de Empleados", size=24, weight=ft.FontWeight.BOLD, color="#2196F3"),
-                ft.Divider(),
-                datos_personales,
-                datos_bancarios,
-                botones
-            ], spacing=20, scroll=ft.ScrollMode.ALWAYS),
-            expand=True,
-            padding=20
-        )
+        ft.Column([
+            ft.Text("Gestión de Empleados", size=24, weight=ft.FontWeight.BOLD, color="#2196F3"),
+            consulta_cedula, boton_consulta,
+            datos_personales,
+            datos_bancarios,
+            botones
+        ], spacing=20)
     )
     page.update()
 
