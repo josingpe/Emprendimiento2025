@@ -11,6 +11,8 @@ def menu_principal(page):
     page.add(ft.Text("Menú Principal"))
     page.update()
 
+
+
 # Función para encriptar la clave con SHA-256
 def encriptar_clave(clave):
     return hashlib.sha256(clave.encode()).hexdigest()
@@ -233,7 +235,6 @@ def abrir_gestion_empleados(page):
         from main import menu_principal as mostrar_menu_principal
 
         menu_principal(page)
-    
     def abrir_reportes(e):
         conn = sqlite3.connect("empleados.db")
         df = pd.read_sql_query("SELECT * FROM empleados", conn)
