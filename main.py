@@ -115,6 +115,10 @@ def mostrar_login(page):
 
 
 # Función para mostrar el menú principal
+import flet as ft
+from datetime import datetime
+import requests
+
 def obtener_tasa_dolar():
     try:
         response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
@@ -126,15 +130,17 @@ def obtener_tasa_dolar():
 
 def mostrar_menu_principal(page):
     page.controls.clear()
-    
+
+    # Texto para la tasa de cambio y fecha/hora
     tasa = ft.Text(f"USD/VES: {obtener_tasa_dolar()}", size=16, weight=ft.FontWeight.BOLD, color="blue")
     fecha_hora = ft.Text(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", size=14, color="gray")
-    
+
     def actualizar_tasa(e):
         tasa.value = f"USD/VES: {obtener_tasa_dolar()}"
         fecha_hora.value = f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         page.update()
-    
+
+    # Fila superior con el título y la tasa de cambio
     encabezado = ft.Row(
         [
             ft.Text("Menú Principal", size=24, weight=ft.FontWeight.BOLD),
@@ -144,12 +150,13 @@ def mostrar_menu_principal(page):
                     tasa,
                     ft.ElevatedButton("Actualizar", icon=ft.Icons.REFRESH, on_click=actualizar_tasa),
                 ],
-                alignment=ft.MainAxisAlignment.END,
+                alignment=ft.MainAxisAlignment.END
             ),
         ],
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
     )
-    
+
+    # Agregar los controles a la página
     page.add(
         encabezado,
         ft.Divider(),
@@ -159,17 +166,14 @@ def mostrar_menu_principal(page):
             ft.ElevatedButton("Cálculo de Nómina", on_click=lambda e: abrir_calculo_nomina(page)),
             ft.ElevatedButton("Reportes", on_click=lambda e: abrir_reportes(page)),
             ft.ElevatedButton("Configuración", on_click=lambda e: abrir_configuracion(page)),
-            
             ft.Divider(),
             ft.ElevatedButton("Cerrar Sesión", on_click=lambda e: mostrar_login(page), bgcolor="red", color="white"),
-            
-            ft.Container(
-                content=fecha_hora,
-                alignment=ft.alignment.bottom_center
-            )
+            ft.Container(content=fecha_hora, alignment=ft.alignment.bottom_center)
         ], alignment=ft.MainAxisAlignment.CENTER)
     )
+
     page.update()
+
 
 
 def abrir_gestion_empleados(page):
