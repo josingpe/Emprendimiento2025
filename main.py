@@ -212,7 +212,7 @@ def guardar_empleado(page, inputs):
 # Función para mostrar la gestión de empleados
 def abrir_gestion_empleados(page):
     page.controls.clear()
-    
+
     def calcular_edad(fecha_nacimiento):
         hoy = datetime.today()
         return hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
@@ -266,25 +266,20 @@ def abrir_gestion_empleados(page):
     # Secciones de datos con títulos
     datos_personales = ft.Column([ 
         ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([nombre1, nombre2], spacing=10),
-        ft.Row([apellido1, apellido2], spacing=10),
-        ft.Row([cedula, correo], spacing=10),
-        ft.Row([direccion], spacing=10),
-        ft.Row([fecha_nacimiento, edad], spacing=10),
-        ft.Row([sexo, estado_civil], spacing=10),
+        ft.Row([nombre1, nombre2, apellido1, apellido2], spacing=10),
+        ft.Row([cedula, correo, direccion], spacing=10),
+        ft.Row([fecha_nacimiento, edad, sexo, estado_civil], spacing=10),
     ], spacing=15)
     
     datos_laborales = ft.Column([
         ft.Text("Datos Laborales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([cargo, departamento], spacing=10),
-        ft.Row([fecha_ingreso, centro_costo], spacing=10),
+        ft.Row([cargo, departamento, fecha_ingreso, centro_costo], spacing=10),
         ft.Row([tipo_pago, estatus], spacing=10),
     ], spacing=15)
     
     datos_bancarios = ft.Column([
         ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([banco, numero_cuenta], spacing=10),
-        ft.Row([codigo_empleado], spacing=10),
+        ft.Row([banco, numero_cuenta, codigo_empleado], spacing=10),
     ], spacing=15)
 
     # Botones
@@ -310,7 +305,6 @@ def abrir_gestion_empleados(page):
     )
     page.update()
 
-   
        
     
 
