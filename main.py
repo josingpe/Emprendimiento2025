@@ -215,6 +215,10 @@ import sqlite3
 from datetime import datetime
 
 
+import flet as ft
+import sqlite3
+from datetime import datetime
+
 def abrir_gestion_empleados(page):
     page.controls.clear()
 
@@ -244,6 +248,15 @@ def abrir_gestion_empleados(page):
     
     def regresar_menu(e):
         mostrar_menu_principal(page)
+    
+    def abrir_reportes(e):
+        conn = sqlite3.connect("empleados.db")
+        df = pd.read_sql_query("SELECT * FROM empleados", conn)
+        conn.close()
+        archivo_excel = "Reporte_Empleados.xlsx"
+        df.to_excel(archivo_excel, index=False)
+        print(f"Reporte generado: {archivo_excel}")
+        subprocess.Popen(["start", "excel", archivo_excel], shell=True)
 
     # Campos de entrada con mayor ancho
     nombre1 = ft.TextField(label="1° Nombre", width=200)
@@ -283,8 +296,8 @@ def abrir_gestion_empleados(page):
     # Botones centrados
     botones = ft.Row([
         ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado, bgcolor="#2196F3", color="white"),
-        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white")
-        
+        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white"),
+        ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes, bgcolor="#4CAF50", color="white")
     ], alignment=ft.MainAxisAlignment.CENTER, spacing=20)
     
     # Agregar todo a la página sin división
@@ -299,86 +312,6 @@ def abrir_gestion_empleados(page):
             ], spacing=20, scroll=ft.ScrollMode.ALWAYS),
             expand=True,
             padding=20
-        )
-    )
-    page.update()
-    
-
-    def abrir_reportes(e):
-        conn = sqlite3.connect("empleados.db")
-        df = pd.read_sql_query("SELECT * FROM empleados", conn)
-        conn.close()
-        archivo_excel = "Reporte_Empleados.xlsx"
-        df.to_excel(archivo_excel, index=False)
-        print(f"Reporte generado: {archivo_excel}")
-        subprocess.Popen(["start", "excel", archivo_excel], shell=True)
-    
-    # Campos de entrada
-    nombre1 = ft.TextField(label="1° Nombre", width=150)
-    nombre2 = ft.TextField(label="2° Nombre", width=150)
-    apellido1 = ft.TextField(label="1° Apellido", width=150)
-    apellido2 = ft.TextField(label="2° Apellido", width=150)
-    cedula = ft.TextField(label="Cédula", width=150)
-    correo = ft.TextField(label="Correo", width=200)
-    direccion = ft.TextField(label="Dirección", width=310)
-    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=150)
-    edad = ft.TextField(label="Edad", width=80, disabled=True)
-    fecha_nacimiento.on_change = actualizar_edad
-    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
-    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=150)
-    cargo = ft.TextField(label="Cargo", width=150)
-    departamento = ft.TextField(label="Departamento", width=150)
-    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=150)
-    centro_costo = ft.TextField(label="Centro de Costo", width=150)
-    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=150)
-    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
-    banco = ft.TextField(label="Banco", width=150)
-    numero_cuenta = ft.TextField(label="Número de Cuenta", width=200)
-    codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
-    
-    # Secciones
-    datos_personales = ft.Column([
-        ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([nombre1, nombre2]),
-        ft.Row([apellido1, apellido2]),
-        ft.Row([cedula, correo]),
-        ft.Row([direccion]),
-        ft.Row([fecha_nacimiento, edad]),
-        ft.Row([sexo, estado_civil]),
-    ], spacing=5)
-    
-    datos_laborales = ft.Column([
-        ft.Text("Datos Laborales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([cargo, departamento]),
-        ft.Row([fecha_ingreso, centro_costo]),
-        ft.Row([tipo_pago, estatus]),
-    ], spacing=5)
-    
-    datos_bancarios = ft.Column([
-        ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([banco, numero_cuenta]),
-        ft.Row([codigo_empleado]),
-    ], spacing=5)
-    
-    # Botones
-    botones = ft.Row([
-        ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado),
-        ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu),
-        ft.ElevatedButton("Reportes", icon=ft.Icons.ASSESSMENT, on_click=abrir_reportes)
-    ], alignment=ft.MainAxisAlignment.CENTER)
-    
-    # Agregar todo a la página con barra de desplazamiento
-    page.add(
-        ft.Container(
-            content=ft.Column([
-                ft.Text("Gestión de Empleados", size=20, weight=ft.FontWeight.BOLD),
-                datos_personales,
-                datos_laborales,
-                datos_bancarios,
-                botones
-            ], spacing=10, scroll=ft.ScrollMode.ALWAYS),
-            expand=True,
-            padding=10
         )
     )
     page.update()
