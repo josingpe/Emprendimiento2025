@@ -6,6 +6,10 @@ import pandas as pd
 import sqlite3
 import flet as ft
 import subprocess
+def menu_principal(page):
+    page.controls.clear()
+    page.add(ft.Text("Menú Principal"))
+    page.update()
 
 # Función para encriptar la clave con SHA-256
 def encriptar_clave(clave):
@@ -226,7 +230,8 @@ def abrir_gestion_empleados(page):
         print("Empleado guardado con éxito.")
     
     def regresar_menu(e):
-        from main import menu_principal
+        from main import menu_principal as mostrar_menu_principal
+
         menu_principal(page)
     
     def abrir_reportes(e):
