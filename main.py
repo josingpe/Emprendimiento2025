@@ -210,6 +210,10 @@ def guardar_empleado(page, inputs):
         page.update()
 
 # Función para mostrar la gestión de empleados
+import flet as ft
+import sqlite3
+from datetime import datetime
+
 def abrir_gestion_empleados(page):
     page.controls.clear()
 
@@ -231,7 +235,7 @@ def abrir_gestion_empleados(page):
         c.execute("INSERT INTO empleados (nombre1, nombre2, apellido1, apellido2, cedula, correo, direccion, fecha_nacimiento, edad, sexo, estado_civil, cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus, banco, numero_cuenta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
                   (nombre1.value, nombre2.value, apellido1.value, apellido2.value, cedula.value, correo.value, direccion.value, fecha_nacimiento.value, edad.value, sexo.value, estado_civil.value, cargo.value, departamento.value, fecha_ingreso.value, centro_costo.value, tipo_pago.value, estatus.value, banco.value, numero_cuenta.value))
         conn.commit()
-        empleado_id = c.lastrowid  # Obtener el ID del empleado recién insertado
+        empleado_id = c.lastrowid
         conn.close()
         codigo_empleado.value = f"EMP{empleado_id:04d}"
         page.update()
@@ -241,59 +245,57 @@ def abrir_gestion_empleados(page):
         mostrar_menu_principal(page)
 
     # Campos de entrada
-    nombre1 = ft.TextField(label="1° Nombre", width=150)
-    nombre2 = ft.TextField(label="2° Nombre", width=150)
-    apellido1 = ft.TextField(label="1° Apellido", width=150)
-    apellido2 = ft.TextField(label="2° Apellido", width=150)
-    cedula = ft.TextField(label="Cédula", width=150)
-    correo = ft.TextField(label="Correo", width=200)
-    direccion = ft.TextField(label="Dirección", width=310)
-    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=150)
+    nombre1 = ft.TextField(label="1° Nombre", width=140)
+    nombre2 = ft.TextField(label="2° Nombre", width=140)
+    apellido1 = ft.TextField(label="1° Apellido", width=140)
+    apellido2 = ft.TextField(label="2° Apellido", width=140)
+    cedula = ft.TextField(label="Cédula", width=140)
+    correo = ft.TextField(label="Correo", width=180)
+    direccion = ft.TextField(label="Dirección", width=220)
+    fecha_nacimiento = ft.TextField(label="Fecha de Nacimiento", width=140)
     edad = ft.TextField(label="Edad", width=80, disabled=True)
     fecha_nacimiento.on_change = actualizar_edad
-    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=150)
-    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=150)
-    cargo = ft.TextField(label="Cargo", width=150)
-    departamento = ft.TextField(label="Departamento", width=150)
-    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=150)
-    centro_costo = ft.TextField(label="Centro de Costo", width=150)
-    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=150)
-    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=150)
-    banco = ft.TextField(label="Banco", width=150)
-    numero_cuenta = ft.TextField(label="Número de Cuenta", width=200)
-    codigo_empleado = ft.TextField(label="Código de Empleado", width=150, disabled=True)
+    sexo = ft.Dropdown(label="Sexo", options=[ft.dropdown.Option("Masculino"), ft.dropdown.Option("Femenino")], width=140)
+    estado_civil = ft.Dropdown(label="Estado Civil", options=[ft.dropdown.Option("Soltero"), ft.dropdown.Option("Casado"), ft.dropdown.Option("Divorciado")], width=140)
+    cargo = ft.TextField(label="Cargo", width=140)
+    departamento = ft.TextField(label="Departamento", width=140)
+    fecha_ingreso = ft.TextField(label="Fecha de Ingreso", width=140)
+    centro_costo = ft.TextField(label="Centro de Costo", width=140)
+    tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=140)
+    estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=140)
+    banco = ft.TextField(label="Banco", width=140)
+    numero_cuenta = ft.TextField(label="Número de Cuenta", width=180)
+    codigo_empleado = ft.TextField(label="Código de Empleado", width=140, disabled=True)
     
-    # Secciones de datos con títulos
-    datos_personales = ft.Column([ 
+    # Secciones con 6-7 campos por línea
+    datos_personales = ft.Column([
         ft.Text("Datos Personales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([nombre1, nombre2, apellido1, apellido2], spacing=10),
-        ft.Row([cedula, correo, direccion], spacing=10),
-        ft.Row([fecha_nacimiento, edad, sexo, estado_civil], spacing=10),
+        ft.Row([nombre1, nombre2, apellido1, apellido2, cedula, correo], spacing=10),
+        ft.Row([direccion, fecha_nacimiento, edad, sexo, estado_civil], spacing=10)
     ], spacing=15)
     
     datos_laborales = ft.Column([
         ft.Text("Datos Laborales", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([cargo, departamento, fecha_ingreso, centro_costo], spacing=10),
-        ft.Row([tipo_pago, estatus], spacing=10),
+        ft.Row([cargo, departamento, fecha_ingreso, centro_costo, tipo_pago, estatus], spacing=10)
     ], spacing=15)
     
     datos_bancarios = ft.Column([
         ft.Text("Información Bancaria", size=16, weight=ft.FontWeight.BOLD),
-        ft.Row([banco, numero_cuenta, codigo_empleado], spacing=10),
+        ft.Row([banco, numero_cuenta, codigo_empleado], spacing=10)
     ], spacing=15)
 
-    # Botones
+    # Botones centrados
     botones = ft.Row([
         ft.ElevatedButton("Guardar", icon=ft.Icons.SAVE, on_click=guardar_empleado, bgcolor="#2196F3", color="white"),
         ft.ElevatedButton("Regresar", icon=ft.Icons.ARROW_BACK, on_click=regresar_menu, bgcolor="grey", color="white")
     ], alignment=ft.MainAxisAlignment.CENTER, spacing=20)
     
-    # Agregar todo a la página con barra de desplazamiento
+    # Agregar todo a la página con diseño más compacto
     page.add(
         ft.Container(
             content=ft.Column([
                 ft.Text("Gestión de Empleados", size=24, weight=ft.FontWeight.BOLD, color="#2196F3"),
-                ft.Divider(),  # Separador
+                ft.Divider(),
                 datos_personales,
                 datos_laborales,
                 datos_bancarios,
