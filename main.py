@@ -111,23 +111,48 @@ def mostrar_login(page):
         shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
     )
 
-    # Texto de la tasa
+    # 🔹 Obtener la tasa de cambio correctamente
+    tasa_actual = obtener_tasa_dolar()
+    if not tasa_actual:
+        tasa_actual = "Error al obtener tasa"
+
+    # 🔹 Crear el texto de la tasa con el valor inicial
     tasa_text = ft.Text(
-        f"Tasa USD/VES: {obtener_tasa_dolar()}",
+        f"Tasa USD/VES: {tasa_actual}",
         size=16,
         weight=ft.FontWeight.BOLD,
         color="#2196F3"
     )
 
     def actualizar_tasa(e):
-        tasa_text.value = f"Tasa USD/VES: {obtener_tasa_dolar()}"
+        nueva_tasa = obtener_tasa_dolar()
+        if not nueva_tasa:
+            nueva_tasa = "Error al obtener tasa"
+        
+        tasa_text.value = f"Tasa USD/VES: {nueva_tasa}"
         page.update()
 
     boton_actualizar = ft.IconButton(
-    icon=ft.Icons.REFRESH,  # Cambio aquí
-    on_click=actualizar_tasa,
-    icon_color="#2196F3"
-)
+        icon=ft.Icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
+    )
+
+    tasa_container = ft.Container(
+        content=ft.Row(
+            [tasa_text, boton_actualizar],
+            alignment=ft.MainAxisAlignment.END
+        ),
+        padding=ft.padding.only(top=10, right=20),
+        alignment=ft.alignment.top_right
+    )
+
+    # 🔹 Agregar la tasa antes de actualizar la página
+    page.controls.clear()
+    page.add(
+        tasa_container,  # Se agrega la tasa a la interfaz
+        ft.Row([card], alignment=ft.MainAxisAlignment.CENTER)
+    )
+    page.update()
+
 
     tasa_container = ft.Container(
         content=ft.Row(
