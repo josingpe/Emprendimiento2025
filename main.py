@@ -124,8 +124,10 @@ def mostrar_login(page):
         page.update()
 
     boton_actualizar = ft.IconButton(
-        icon=ft.icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
-    )
+    icon=ft.Icons.REFRESH,  # Cambio aquí
+    on_click=actualizar_tasa,
+    icon_color="#2196F3"
+)
 
     tasa_container = ft.Container(
         content=ft.Row(
