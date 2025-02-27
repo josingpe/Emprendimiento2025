@@ -205,14 +205,6 @@ def guardar_empleado(page, inputs):
         page.update()
 
 # Función para mostrar la gestión de empleados
-import flet as ft
-import sqlite3
-from datetime import datetime
-
-
-import flet as ft
-import sqlite3
-from datetime import datetime
 
 import flet as ft
 import sqlite3
@@ -299,7 +291,29 @@ def abrir_gestion_empleados(page):
     centro_costo = ft.TextField(label="Centro de Costo", width=input_width)
     tipo_pago = ft.Dropdown(label="Tipo de Pago", options=[ft.dropdown.Option("Mensual"), ft.dropdown.Option("Quincenal")], width=input_width)
     estatus = ft.Dropdown(label="Estatus", options=[ft.dropdown.Option("Activo"), ft.dropdown.Option("Inactivo")], width=input_width)
-    banco = ft.TextField(label="Banco", width=input_width)
+    banco = ft.TextField(label="Banco",options=[
+        ft.dropdown.Option("Banco de Venezuela"),
+        ft.dropdown.Option("Banco Nacional de Crédito (BNC)"),
+        ft.dropdown.Option("BBVA Provincial"),
+        ft.dropdown.Option("Banesco"),
+        ft.dropdown.Option("Mercantil Banco"),
+        ft.dropdown.Option("Banco del Tesoro"),
+        ft.dropdown.Option("Bancamiga"),
+        ft.dropdown.Option("Banplus"),
+        ft.dropdown.Option("Bancaribe"),
+        ft.dropdown.Option("Venezolano de Crédito"),
+        ft.dropdown.Option("Banco Plaza"),
+        ft.dropdown.Option("Banco Fondo Común"),
+        ft.dropdown.Option("Banco DELSUR"),
+        ft.dropdown.Option("Banco Exterior"),
+        ft.dropdown.Option("Banco Sofitasa"),
+        ft.dropdown.Option("Bancrecer"),
+        ft.dropdown.Option("Banco Caroní"),
+        ft.dropdown.Option("Banco Activo"),
+        ft.dropdown.Option("100% Banco"),
+        ft.dropdown.Option("Mi Banco"),
+        ft.dropdown.Option("Bicentenario (banco digital de los trabajadores y trabajadoras)"),
+    ], width=input_width)
     numero_cuenta = ft.TextField(label="Número de Cuenta", width=input_width)
     codigo_empleado = ft.TextField(label="Código de Empleado", width=input_width, disabled=True)
     
