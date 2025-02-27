@@ -94,7 +94,7 @@ def verificar_credenciales(page, usuario, clave):
 # Función para mostrar la pantalla de inicio de sesión
 # Función para mostrar la pantalla de inicio de sesión con la tasa del dólar en la parte superior derecha
 def mostrar_login(page):
-    page.bgcolor = ft.colors.WHITE70  # Color de fondo suave
+    page.bgcolor = ft.colors.white  # Color de fondo suave
     
     # URL de la imagen
     fondo_imagen_url = "https://i.ibb.co/XftFnLvx/1740690784448.jpg"

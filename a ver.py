@@ -12,7 +12,7 @@ def obtener_tasa_dolar():
 
 # Función para mostrar la pantalla de inicio de sesión con la tasa del dólar en la parte superior derecha
 def mostrar_login(page):
-    page.bgcolor = ft.colors.WHITE  # Color de fondo suave
+    page.bgcolor = ft.Colors.WHITE70  # Color de fondo suave
     
     # URL de la imagen
     fondo_imagen_url = "https://i.ibb.co/XftFnLvx/1740690784448.jpg"
@@ -45,7 +45,7 @@ def mostrar_login(page):
         page.update()
 
     boton_actualizar = ft.IconButton(
-        icon=ft.icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
+        icon=ft.Icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
     )
 
     tasa_container = ft.Container(
@@ -80,7 +80,7 @@ def mostrar_login(page):
         padding=30,
         border_radius=10,
         bgcolor="white",
-        shadow=ft.BoxShadow(blur_radius=10, color=ft.colors.GREY_500),
+        shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
         width=350,
         height=300,
         alignment=ft.alignment.center
