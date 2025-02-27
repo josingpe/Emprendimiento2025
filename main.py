@@ -312,8 +312,7 @@ def abrir_gestion_empleados(page):
         ft.dropdown.Option("Banco Activo"),
         ft.dropdown.Option("100% Banco"),
         ft.dropdown.Option("Mi Banco"),
-        ft.dropdown.Option("Bicentenario (banco digital de los trabajadores y trabajadoras)"),
-    ], width=input_width)
+        ft.dropdown.Option("Bicentenario (banco digital de los trabajadores y trabajadoras)")], width=input_width)
     numero_cuenta = ft.TextField(label="Número de Cuenta", width=input_width)
     codigo_empleado = ft.TextField(label="Código de Empleado", width=input_width, disabled=True)
     
