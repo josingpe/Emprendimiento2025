@@ -78,14 +78,7 @@ def verificar_credenciales(page, usuario, clave):
     except sqlite3.Error as e:
         page.snack_bar = ft.SnackBar(content=ft.Text(f"Error en la base de datos: {e}"), open=True)
         page.update()
-# Función para obtener la tasa de cambio USD/VES
-def obtener_tasa_dolar():
-    try:
-        respuesta = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
-        data = respuesta.json()
-        return data["rates"].get("VES", "No disponible")
-    except Exception as e:
-        return f"Error: {e}"
+
 # Función para mostrar la pantalla de inicio de sesión
 def mostrar_login(page):
     page.bgcolor = "#f4f4f4"
@@ -115,29 +108,7 @@ def mostrar_login(page):
     page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
     page.update()
 
-    tasa_text = ft.Text(
-        f"Tasa USD/VES: {obtener_tasa_dolar()}",
-        size=16,
-        weight=ft.FontWeight.BOLD,
-        color="#2196F3"
-    )
 
-    def actualizar_tasa(e):
-        tasa_text.value = f"Tasa USD/VES: {obtener_tasa_dolar()}"
-        page.update()
-
-    boton_actualizar = ft.IconButton(
-        icon=ft.icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
-    )
-
-    tasa_container = ft.Container(
-        content=ft.Row(
-            [tasa_text, boton_actualizar],
-            alignment=ft.MainAxisAlignment.END  # Alinea la tasa a la derecha
-        ),
-        padding=ft.padding.only(top=10, right=20),  # Posición superior derecha
-        alignment=ft.alignment.top_right
-    )
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
