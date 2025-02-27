@@ -111,10 +111,7 @@ def mostrar_login(page):
         shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
     )
 
-    page.controls.clear()
-    page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
-    page.update()
-
+    # Texto de la tasa
     tasa_text = ft.Text(
         f"Tasa USD/VES: {obtener_tasa_dolar()}",
         size=16,
@@ -138,6 +135,15 @@ def mostrar_login(page):
         padding=ft.padding.only(top=10, right=20),  # Posición superior derecha
         alignment=ft.alignment.top_right
     )
+
+    # Limpiar la página y agregar los elementos
+    page.controls.clear()
+    page.add(
+        tasa_container,  # Primero se muestra la tasa en la parte superior
+        ft.Row([card], alignment=ft.MainAxisAlignment.CENTER)
+    )
+    page.update()
+
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
