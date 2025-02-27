@@ -13,11 +13,6 @@ def menu_principal(page):
     page.controls.clear()
     page.add(ft.Text("Menú Principal"))
     page.update()
-
-
-
-
-
 # Función para encriptar la clave con SHA-256
 def encriptar_clave(clave):
     return hashlib.sha256(clave.encode()).hexdigest()
