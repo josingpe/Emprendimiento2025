@@ -138,6 +138,11 @@ async def mostrar_login(page):
         tasa_text.value = f"Tasa USD/VES: {tasa}"
         page.update()
 
+    # Cargar la tasa de cambio al inicio
+    tasa_inicial = await obtener_tasa_dolar()
+    tasa_text.value = f"Tasa USD/VES: {tasa_inicial}"
+
+    # Botón de actualizar
     boton_actualizar = ft.IconButton(
         icon=ft.Icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
     )
@@ -158,11 +163,18 @@ async def mostrar_login(page):
     # Botón de inicio de sesión
     boton_login = ft.ElevatedButton(
         text="Iniciar Sesión",
-        on_click=lambda e: print(f"Usuario: {usuario.value}, Clave: {clave.value}"),
+        on_click=lambda e: validar_login(page, usuario.value, clave.value),
         bgcolor="#2196F3",
         color="white"
     )
-
+    # Función para validar credenciales y mostrar el menú principal
+def validar_login(page, usuario, clave):
+    if usuario == "admin" and clave == "1234":  # Puedes cambiar esto a una validación real
+        mostrar_menu_principal(page)
+    else:
+        page.snack_bar = ft.SnackBar(content=ft.Text("Usuario o clave incorrectos"), bgcolor="red")
+        page.snack_bar.open = True
+        page.update()
     # Contenedor de la tarjeta de inicio de sesión centrada
     card = ft.Container(
         content=ft.Column(
@@ -202,6 +214,9 @@ async def main(page):
     page.window_height = 800
     page.window_resizable = True  # Permite redimensionar la ventana
     await mostrar_login(page)
+
+# Ejecuta la aplicación
+ft.app(target=main)
 
 
 # Función para mostrar el menú principal
