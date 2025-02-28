@@ -99,6 +99,24 @@ def mostrar_login(page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
+
+    # URL de la imagen
+    fondo_imagen_url = "https://i.ibb.co/XftFnLvx/1740690784448.jpg"
+
+    # Imagen pequeña en la parte superior izquierda
+    imagen_pequena = ft.Image(
+        src=fondo_imagen_url,
+        width=100,
+        height=100,
+        fit=ft.ImageFit.CONTAIN
+    )
+    
+    imagen_container = ft.Container(
+        content=imagen_pequena,
+        alignment=ft.alignment.top_left,
+        padding=ft.padding.only(top=10, left=10)  
+    )
+    
     usuario = ft.TextField(label="Usuario", width=300, bgcolor="white", border_color="#2196F3")
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
