@@ -324,18 +324,31 @@ def abrir_gestion_empleados(page):
         mostrar_menu_principal(page)
     
     def abrir_reportes(e):
+        # Conectarse a la base de datos y obtener datos
         conn = sqlite3.connect("empleados.db")
         df = pd.read_sql_query("SELECT * FROM empleados", conn)
         conn.close()
-        archivo_excel = "Reporte_Empleados.xlsx"
-        df.to_excel(archivo_excel, index=False)
-        print(f"Reporte generado: {archivo_excel}")
-        if platform.system() == "Windows":
-            os.startfile(archivo_excel)
-        elif platform.system() == "Darwin":  # macOS
-            os.system(f"open {archivo_excel}")
-        else:  # Linux
-            os.system(f"xdg-open {archivo_excel}")
+        
+        # Guardar en memoria en formato Excel
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
+            df.to_excel(writer, index=False)
+        buffer.seek(0)  # Reiniciar el puntero del archivo en memoria
+        
+        # Generar descarga
+        page.download("Reporte_Empleados.xlsx", buffer.read())
+
+    # Botón para descargar el reporte
+    boton_reportes = ft.ElevatedButton(
+        "Descargar Reporte",
+        icon=ft.Icons.DOWNLOAD,
+        on_click=abrir_reportes,
+        bgcolor="#4CAF50",
+        color="white"
+    )
+
+    page.add(boton_reportes)
+    page.update()
     
     def consultar_empleado(e):
         conn = sqlite3.connect("empleados.db")
