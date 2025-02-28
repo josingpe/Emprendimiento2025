@@ -96,7 +96,7 @@ async def obtener_tasa_dolar():
     
 # Función para mostrar la pantalla de inicio de sesión
 def mostrar_login(page):
-    page.bgcolor = "#f4f4f4"
+    page.bgcolor = ft.Colors.WHITE  # Corregido `ft.colors` -> `ft.Colors`
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
@@ -127,14 +127,14 @@ def mostrar_login(page):
     )
 
     # Función asíncrona para actualizar la tasa
-    async def actualizar_tasa():
-        tasa = await obtener_tasa_dolar()
+    def actualizar_tasa(e=None):
+        tasa = asyncio.run(obtener_tasa_dolar())  # Se usa `asyncio.run()` en lugar de `get_event_loop()`
         tasa_text.value = f"Tasa USD/VES: {tasa}"
         page.update()
     
     boton_actualizar = ft.IconButton(
         icon=ft.Icons.REFRESH,  # Corregido `ft.icons` -> `ft.Icons`
-        on_click=lambda e: page.run_task(actualizar_tasa()),  # Corrección
+        on_click=actualizar_tasa,
         icon_color="#2196F3"
     )
 
@@ -150,9 +150,10 @@ def mostrar_login(page):
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
     boton_login = ft.ElevatedButton(
-        text="Iniciar Sesión",
-        on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),
-        bgcolor="#2196F3", color="white"
+    text="Iniciar Sesión",
+    on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),  # Agregar validación
+    bgcolor="#2196F3",
+    color="white"
         
     )
 
@@ -186,7 +187,7 @@ def mostrar_login(page):
             expand=True
         )
     )
-    
+    page.update()
  
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
