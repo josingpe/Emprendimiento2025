@@ -188,7 +188,8 @@ def mostrar_login(page):
         )
     )
     page.update()
- 
+ # Llamar a la actualización de la tasa al inicio
+    actualizar_tasa()
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
