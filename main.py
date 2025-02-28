@@ -562,3 +562,5 @@ def main(page: ft.Page):
 if __name__ == "__main__":
     ft.app(target=main)
 
+  # Llamar a la actualización de la tasa al inicio
+    asyncio.create_task(actualizar_tasa())  # Corrección
