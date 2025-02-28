@@ -156,7 +156,8 @@ def mostrar_login(page):
         
     )
 
-    
+      # Llamar a la actualización de la tasa al inicio
+    asyncio.create_task(actualizar_tasa())  # Corrección
 
    # Tarjeta de inicio de sesión
     card = ft.Container(
