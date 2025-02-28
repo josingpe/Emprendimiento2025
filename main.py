@@ -81,6 +81,7 @@ def verificar_credenciales(page, usuario, clave):
 
 import flet as ft
 import httpx  # Usamos httpx para hacer solicitudes asincrónicas
+import asyncio
 
 # Función asincrónica para obtener la tasa de cambio USD/VES
 # Función asincrónica para obtener la tasa de cambio USD/VES
