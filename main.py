@@ -84,7 +84,6 @@ import httpx  # Usamos httpx para hacer solicitudes asincrónicas
 import asyncio
 
 # Función asincrónica para obtener la tasa de cambio USD/VES
-# Función asincrónica para obtener la tasa de cambio USD/VES
 async def obtener_tasa_dolar():
     try:
         async with httpx.AsyncClient() as client:
@@ -99,7 +98,6 @@ def mostrar_login(page):
     page.bgcolor = "#f4f4f4"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
 
     # URL de la imagen
     fondo_imagen_url = "https://i.ibb.co/XftFnLvx/1740690784448.jpg"
@@ -133,8 +131,8 @@ def mostrar_login(page):
         page.update()
     
     boton_actualizar = ft.IconButton(
-        icon=ft.Icons.REFRESH,  # Corregido `ft.icons` -> `ft.Icons`
-        on_click=lambda e: asyncio.create_task(actualizar_tasa()),  # Corrección
+        icon=ft.Icons.REFRESH,  
+        on_click=lambda e: page.run_task(actualizar_tasa()),  # Corrección
         icon_color="#2196F3"
     )
 
@@ -146,17 +144,18 @@ def mostrar_login(page):
         padding=ft.padding.only(top=10, right=20),
         alignment=ft.alignment.top_right
     )
+
     usuario = ft.TextField(label="Usuario", width=300, bgcolor="white", border_color="#2196F3")
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
     boton_login = ft.ElevatedButton(
         text="Iniciar Sesión",
-        on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),
-        bgcolor="#2196F3", color="white"
-        
+        on_click=lambda e: print(f"Usuario: {usuario.value}, Clave: {clave.value}"),  # Simulación
+        bgcolor="#2196F3", 
+        color="white"
     )
 
-     # Tarjeta de inicio de sesión
+    # Tarjeta de inicio de sesión
     card = ft.Container(
         content=ft.Column(
             [usuario, clave, boton_login],
@@ -167,7 +166,7 @@ def mostrar_login(page):
         padding=30,
         border_radius=10,
         bgcolor="white",
-        shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),  # Corregido `ft.colors` -> `ft.Colors`
+        shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
         width=350,
         height=300,
         alignment=ft.alignment.center
@@ -186,8 +185,11 @@ def mostrar_login(page):
             expand=True
         )
     )
-  # Llamar a la actualización de la tasa al inicio
- 
+    page.update()
+
+    # 🔴 La línea estaba fuera de la función, ahora está dentro
+    page.run_task(actualizar_tasa())  # ✅ Corrección
+
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
     page.controls.clear()
