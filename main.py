@@ -106,6 +106,7 @@ def mostrar_login(page):
         text="Iniciar Sesión",
         on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),
         bgcolor="#2196F3", color="white"
+        
     )
 
     card = ft.Container(
