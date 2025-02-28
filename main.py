@@ -131,7 +131,8 @@ def mostrar_login(page):
         tasa = await obtener_tasa_dolar()
         tasa_text.value = f"Tasa USD/VES: {tasa}"
         page.update()
-
+      # Llamar a la actualización de la tasa al inicio
+    asyncio.create_task(actualizar_tasa())  # Corrección
     boton_actualizar = ft.IconButton(
         icon=ft.Icons.REFRESH,  # Corregido `ft.icons` -> `ft.Icons`
         on_click=lambda e: asyncio.create_task(actualizar_tasa()),  # Corrección
@@ -156,10 +157,7 @@ def mostrar_login(page):
         
     )
 
-      # Llamar a la actualización de la tasa al inicio
-    asyncio.create_task(actualizar_tasa())  # Corrección
-
-   # Tarjeta de inicio de sesión
+     # Tarjeta de inicio de sesión
     card = ft.Container(
         content=ft.Column(
             [usuario, clave, boton_login],
