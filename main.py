@@ -156,15 +156,7 @@ def mostrar_login(page):
         
     )
 
-    card = ft.Container(
-        content=ft.Column(
-            [usuario, clave, boton_login],
-            spacing=10, alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        ),
-        padding=20, border_radius=10, bgcolor="white",
-        shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
-    )
+    
 
    # Tarjeta de inicio de sesión
     card = ft.Container(
