@@ -116,7 +116,14 @@ def mostrar_login(page):
         alignment=ft.alignment.top_left,
         padding=ft.padding.only(top=10, left=10)  
     )
-    
+
+    # Texto de la tasa de cambio (se actualizará después)
+    tasa_text = ft.Text(
+        "Tasa USD/VES: Cargando...",
+        size=16,
+        weight=ft.FontWeight.BOLD,
+        color="#2196F3"
+    )
     usuario = ft.TextField(label="Usuario", width=300, bgcolor="white", border_color="#2196F3")
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
