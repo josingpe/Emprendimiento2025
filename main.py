@@ -132,7 +132,7 @@ def mostrar_login(page):
     
     boton_actualizar = ft.IconButton(
         icon=ft.Icons.REFRESH,  
-        on_click=lambda e: page.run_task(actualizar_tasa()),  # Corrección
+        on_click=lambda e: page.run_task(actualizar_tasa),  # ✅ Corrección
         icon_color="#2196F3"
     )
 
@@ -187,8 +187,8 @@ def mostrar_login(page):
     )
     page.update()
 
-    # 🔴 La línea estaba fuera de la función, ahora está dentro
-    page.run_task(actualizar_tasa())  # ✅ Corrección
+    # 🔴 La línea estaba mal antes, ahora se pasa correctamente la referencia
+    page.run_task(actualizar_tasa)  # ✅ Corrección
 
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
