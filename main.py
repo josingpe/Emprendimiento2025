@@ -167,7 +167,7 @@ def mostrar_login(page):
     page.controls.clear()
     page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
     page.update()
-
+    actualizar_tasa()
 
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
