@@ -124,6 +124,26 @@ def mostrar_login(page):
         weight=ft.FontWeight.BOLD,
         color="#2196F3"
     )
+
+    def actualizar_tasa(e=None):
+        tasa = asyncio.run(obtener_tasa_dolar())  # Se usa `asyncio.run()` en lugar de `get_event_loop()`
+        tasa_text.value = f"Tasa USD/VES: {tasa}"
+        page.update()
+
+    boton_actualizar = ft.IconButton(
+        icon=ft.Icons.REFRESH,  # Corregido `ft.icons` -> `ft.Icons`
+        on_click=actualizar_tasa,
+        icon_color="#2196F3"
+    )
+
+    tasa_container = ft.Container(
+        content=ft.Row(
+            [tasa_text, boton_actualizar],
+            alignment=ft.MainAxisAlignment.END  
+        ),
+        padding=ft.padding.only(top=10, right=20),
+        alignment=ft.alignment.top_right
+    )
     usuario = ft.TextField(label="Usuario", width=300, bgcolor="white", border_color="#2196F3")
     clave = ft.TextField(label="Clave", password=True, width=300, bgcolor="white", border_color="#2196F3")
 
