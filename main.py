@@ -165,10 +165,36 @@ def mostrar_login(page):
         shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),
     )
 
+   # Tarjeta de inicio de sesión
+    card = ft.Container(
+        content=ft.Column(
+            [usuario, clave, boton_login],
+            spacing=15,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        ),
+        padding=30,
+        border_radius=10,
+        bgcolor="white",
+        shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),  # Corregido `ft.colors` -> `ft.Colors`
+        width=350,
+        height=300,
+        alignment=ft.alignment.center
+    )
+
+    card_container = ft.Container(
+        content=card,
+        alignment=ft.alignment.center
+    )
+
+    # Limpiar la pantalla y agregar elementos
     page.controls.clear()
-    page.add(ft.Row([card], alignment=ft.MainAxisAlignment.CENTER))
-    page.update()
-    actualizar_tasa()
+    page.add(
+        ft.Stack(
+            controls=[imagen_container, tasa_container, card_container],
+            expand=True
+        )
+    )
 
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
