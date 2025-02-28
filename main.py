@@ -126,14 +126,15 @@ def mostrar_login(page):
         color="#2196F3"
     )
 
-    def actualizar_tasa(e=None):
-        tasa = asyncio.run(obtener_tasa_dolar())  # Se usa `asyncio.run()` en lugar de `get_event_loop()`
+    # Función asíncrona para actualizar la tasa
+    async def actualizar_tasa():
+        tasa = await obtener_tasa_dolar()
         tasa_text.value = f"Tasa USD/VES: {tasa}"
         page.update()
 
     boton_actualizar = ft.IconButton(
         icon=ft.Icons.REFRESH,  # Corregido `ft.icons` -> `ft.Icons`
-        on_click=actualizar_tasa,
+        on_click=lambda e: asyncio.create_task(actualizar_tasa()),  # Corrección
         icon_color="#2196F3"
     )
 
