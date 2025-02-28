@@ -558,8 +558,7 @@ def main(page: ft.Page):
     actualizar_github("Inicialización de la base de datos")  # Agregar aquí la actualización automática
     page.title = "Sistema de Nómina"
     mostrar_login(page)  # Muestra la pantalla de inicio de sesión
-  # Llamar a la actualización de la tasa al inicio
-    asyncio.create_task(actualizar_tasa())  # Corrección
+
 if __name__ == "__main__":
     ft.app(target=main)
 
