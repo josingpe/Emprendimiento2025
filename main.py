@@ -108,16 +108,6 @@ def mostrar_login(page):
         bgcolor="#2196F3", color="white"
         
     )
-# URL de la imagen
-    fondo_imagen_url = "https://i.ibb.co/XftFnLvx/1740690784448.jpg"
-
-    # Imagen pequeña en la parte superior izquierda
-    imagen_pequena = ft.Image(
-        src=fondo_imagen_url,
-        width=100,  # Ajusta el tamaño de la imagen
-        height=100,
-        fit=ft.ImageFit.CONTAIN
-    )
 
     card = ft.Container(
         content=ft.Column(
