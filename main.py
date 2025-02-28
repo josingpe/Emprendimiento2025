@@ -186,8 +186,7 @@ def mostrar_login(page):
             expand=True
         )
     )
-    actualizar_tasa()
-
+    
  
 # Función para mostrar el menú principal
 def mostrar_menu_principal(page):
