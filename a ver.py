@@ -1,59 +1,67 @@
+# Función asincrónica para obtener la tasa de cambio USD/VES
 import flet as ft
-import requests  # Importación correcta
+import asyncio
+import httpx
 
-# Función para obtener la tasa de cambio USD/VES
-def obtener_tasa_dolar():
+# Función para obtener la tasa del dólar de forma asíncrona
+async def obtener_tasa_dolar():
     try:
-        respuesta = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
-        data = respuesta.json()
-        return data["rates"].get("VES", "No disponible")
+        async with httpx.AsyncClient() as client:
+            respuesta = await client.get("https://api.exchangerate-api.com/v4/latest/USD")
+            data = respuesta.json()
+            return data["rates"].get("VES", "No disponible")
     except Exception as e:
         return f"Error: {e}"
 
-# Función para mostrar la pantalla de inicio de sesión con la tasa del dólar en la parte superior derecha
+# Función para mostrar la pantalla de inicio de sesión con la tasa del dólar y la imagen
 def mostrar_login(page):
-    page.bgcolor = ft.colors.WHITE  # Color de fondo suave
-    
+    page.bgcolor = ft.Colors.WHITE  # Corregido `ft.colors` -> `ft.Colors`
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
     # URL de la imagen
     fondo_imagen_url = "https://i.ibb.co/XftFnLvx/1740690784448.jpg"
 
     # Imagen pequeña en la parte superior izquierda
     imagen_pequena = ft.Image(
         src=fondo_imagen_url,
-        width=100,  # Ajusta el tamaño de la imagen
+        width=100,
         height=100,
         fit=ft.ImageFit.CONTAIN
     )
     
-    # Contenedor de la imagen pequeña en la parte superior izquierda
     imagen_container = ft.Container(
         content=imagen_pequena,
         alignment=ft.alignment.top_left,
-        padding=ft.padding.only(top=10, left=10)  # Ajusta la posición de la imagen
+        padding=ft.padding.only(top=10, left=10)  
     )
 
-    # Tasa de cambio USD/VES en la parte superior derecha con color azul corporativo
+    # Texto de la tasa de cambio (se actualizará después)
     tasa_text = ft.Text(
-        f"Tasa USD/VES: {obtener_tasa_dolar()}",
+        "Tasa USD/VES: Cargando...",
         size=16,
         weight=ft.FontWeight.BOLD,
         color="#2196F3"
     )
 
-    def actualizar_tasa(e):
-        tasa_text.value = f"Tasa USD/VES: {obtener_tasa_dolar()}"
+    # Función para actualizar la tasa de forma correcta sin usar event loops en hilos secundarios
+    def actualizar_tasa(e=None):
+        tasa = asyncio.run(obtener_tasa_dolar())  # Se usa `asyncio.run()` en lugar de `get_event_loop()`
+        tasa_text.value = f"Tasa USD/VES: {tasa}"
         page.update()
 
     boton_actualizar = ft.IconButton(
-        icon=ft.icons.REFRESH, on_click=actualizar_tasa, icon_color="#2196F3"
+        icon=ft.Icons.REFRESH,  # Corregido `ft.icons` -> `ft.Icons`
+        on_click=actualizar_tasa,
+        icon_color="#2196F3"
     )
 
     tasa_container = ft.Container(
         content=ft.Row(
             [tasa_text, boton_actualizar],
-            alignment=ft.MainAxisAlignment.END  # Alinea la tasa a la derecha
+            alignment=ft.MainAxisAlignment.END  
         ),
-        padding=ft.padding.only(top=10, right=20),  # Posición superior derecha
+        padding=ft.padding.only(top=10, right=20),
         alignment=ft.alignment.top_right
     )
 
@@ -63,13 +71,14 @@ def mostrar_login(page):
 
     # Botón de inicio de sesión
     boton_login = ft.ElevatedButton(
-        text="Iniciar Sesión",
-        on_click=lambda e: print(f"Usuario: {usuario.value}, Clave: {clave.value}"),
-        bgcolor="#2196F3",
-        color="white"
+    text="Iniciar Sesión",
+    on_click=lambda e: verificar_credenciales(page, usuario.value, clave.value),  # Agregar validación
+    bgcolor="#2196F3",
+    color="white"
+
     )
 
-    # Contenedor de la tarjeta de inicio de sesión centrada
+    # Tarjeta de inicio de sesión
     card = ft.Container(
         content=ft.Column(
             [usuario, clave, boton_login],
@@ -80,34 +89,36 @@ def mostrar_login(page):
         padding=30,
         border_radius=10,
         bgcolor="white",
-        shadow=ft.BoxShadow(blur_radius=10, color=ft.colors.GREY_500),
+        shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY_500),  # Corregido `ft.colors` -> `ft.Colors`
         width=350,
         height=300,
         alignment=ft.alignment.center
     )
 
-    # Contenedor centrado de la tarjeta
     card_container = ft.Container(
         content=card,
         alignment=ft.alignment.center
     )
 
-    # Limpia la pantalla y agrega los elementos
+    # Limpiar la pantalla y agregar elementos
     page.controls.clear()
     page.add(
         ft.Stack(
-            controls=[imagen_container, tasa_container, card_container],  # Solo la imagen pequeña, la tasa y la tarjeta de inicio de sesión centrada
+            controls=[imagen_container, tasa_container, card_container],
             expand=True
         )
     )
     page.update()
 
+    # Llamar a la actualización de la tasa al inicio
+    actualizar_tasa()
+
 # Función principal
 def main(page):
     page.window_width = 800
     page.window_height = 800
-    page.window_resizable = True  # Permite redimensionar la ventana
+    page.window_resizable = True  
     mostrar_login(page)
 
-# Ejecuta la aplicación
+# Ejecutar la aplicación
 ft.app(target=main)
